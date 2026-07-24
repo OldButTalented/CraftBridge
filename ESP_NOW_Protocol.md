@@ -45,11 +45,13 @@ All multibyte fields use little-endian wire order. The packet is 48 bytes.
 
 ### Valid mask
 
+Signal eligibility is governed exclusively by [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md), version 1.0.0.
+
 | Bit | Signal | Version 1 status |
 |---:|---|---|
-| 0 | RPM | Eligible from a Verified source mapping |
-| 1 | Engine temperature | Eligible from a Verified source mapping |
-| 2 | Engine runtime minutes | Eligible from a Verified source mapping |
+| 0 | RPM | Authorized by SmartCraft Input Contract v1.0.0 |
+| 1 | Engine temperature | Authorized by SmartCraft Input Contract v1.0.0 |
+| 2 | Engine runtime minutes | Authorized by SmartCraft Input Contract v1.0.0 |
 | 3–31 | Reserved | Must be zero |
 
 A numeric field whose validity bit is clear must be ignored regardless of its encoded value.

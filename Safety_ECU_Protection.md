@@ -75,8 +75,8 @@ SmartCraft switched +12 V pinout is **Unknown until physically verified** for th
 
 ## Data safety
 
-- Production output allowlist contains only Verified SmartCraft mappings.
-- Candidate or Unknown values are never presented as facts to Garmin.
+- Production output allowlist contains only inputs authorized by [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md).
+- Candidate, Strong, Weak or Unknown mappings are never presented as facts to Garmin.
 - Stale values become unavailable/suppressed, not zero.
 - Plausibility checks must reject malformed and out-of-range data without retaining false freshness.
 - Engine and device instances must be explicit to prevent data being attributed to the wrong engine.
@@ -91,7 +91,7 @@ SmartCraft switched +12 V pinout is **Unknown until physically verified** for th
 | Wireless loss shown as valid engine data | Sequence, CRC, per-signal age, stale gate | Suppress/use unavailable encoding |
 | NMEA segment unpowered or mis-terminated | NET-S/NET-C and 60-ohm preflight checks | Disable helm CAN TX |
 | Garmin and gateway both assumed to power network | Explicit external power injection and wiring review | Remove power until one reviewed source remains |
-| Unknown SmartCraft field emitted | Compile-time allowlist and mapping tests | Withhold field |
+| Unauthorized SmartCraft field emitted | Contract-based compile-time allowlist and mapping tests | Withhold field |
 | Cross-domain wiring error | Separate connectors, net names, continuity test | No power; correct harness |
 
 ## Installation stop conditions

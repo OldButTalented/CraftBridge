@@ -40,6 +40,8 @@ Do not present reverse-engineered information as an official Mercury, Garmin or 
 
 A SmartCraft source mapping and its NMEA 2000 destination must be verified independently.
 
+[`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md) is the sole authority for concrete SmartCraft input definitions. Any technical addition, removal or modification requires a new Verified WP7 conclusion, a contract-version update and corresponding decoder and test changes.
+
 ## Safety requirements
 
 The engine-side SmartCraft interface must remain physically receive-only.
@@ -50,7 +52,7 @@ Contributions must not:
 - Enable SmartCraft CAN transmission or acknowledgement
 - Add termination to the existing SmartCraft network
 - Electrically connect SmartCraft CAN-H/CAN-L to NMEA CAN-H/CAN-L
-- Emit Candidate, TBD or Unknown SmartCraft values as valid production data
+- Emit Candidate, Strong, Weak or Unknown SmartCraft mappings as valid production data
 - Replace stale or invalid data with zero
 - Bypass the staged test and approval process
 

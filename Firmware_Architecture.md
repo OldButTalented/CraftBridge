@@ -3,7 +3,7 @@
 ## Principles
 
 - Engine-side firmware is a passive consumer of SmartCraft broadcasts.
-- Only Verified SmartCraft mappings enter the production decoder allowlist.
+- Only inputs authorized by [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md) enter the production decoder allowlist.
 - Wireless transport carries normalized values, not raw SmartCraft frames.
 - Helm-side firmware owns NMEA formatting, address claim and PGN scheduling.
 - Stale, malformed or unsupported data fails closed.
@@ -39,22 +39,20 @@ If bitrate or required configuration is Unknown, startup must stop before live S
 | Task | Priority/behavior |
 |---|---|
 | SmartCraft RX | Highest application priority; drains TWAI receive queue, validates frame shape and timestamps frames |
-| Verified decoder | Applies exact allowlisted ID/page/field/scaling rules and updates a lock-free or short-lock signal store |
+| Verified decoder | Applies the exact rules from the controlled SmartCraft input contract and updates a lock-free or short-lock signal store |
 | Snapshot publisher | Copies the current signal store, calculates per-signal age and sends a bounded ESP-NOW packet |
 | Health monitor | Tracks bus errors, queue overflow, wireless failures, resets and uptime |
 | Optional debug logger | Bench-only, rate-limited and unable to inject CAN traffic |
 
 ### Decoder allowlist
 
-Initial eligible mappings are documented in [`NMEA2000_Mapping.md`](NMEA2000_Mapping.md):
+[`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md), version 1.0.0, is the sole authority for concrete CAN IDs, pages, fields, byte order, scaling and units used by the decoder.
 
-- RPM: `0x170`, `D1=0x00`, `D2:D3` big-endian, 1 RPM/bit — Verified.
-- Engine temperature: `0x1A0`, `D1=0x07`, `D3`, 1 degree C/bit — Verified.
-- Engine hours: `0x1A0/D1=0x02` and synchronized `0x1E0/D1=0x00`, `D4:D5` big-endian minutes — Verified mapping; primary-source ownership Unknown.
+The initial eligible signal names are RPM, engine temperature and engine runtime. Their concrete input definitions are intentionally not duplicated here.
 
 The implementation must choose one documented runtime source or reconcile the two without double-counting. That choice is TBD.
 
-Oil pressure, fuel rate/load, battery voltage, throttle, gear and IAC fields remain excluded until their mappings meet the project's Verified threshold.
+All inputs absent from the current SmartCraft input contract remain excluded.
 
 ## Helm-side firmware
 

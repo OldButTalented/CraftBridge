@@ -66,7 +66,7 @@ flowchart LR
 
 - SmartCraft and NMEA 2000 are separate CAN electrical domains. No CAN frame forwarding or wire-level bridge exists.
 - The wireless packet is the only data path between nodes.
-- Engine-side decoded values cross the boundary only when their SmartCraft mappings are documented as Verified in this repository and the source frame is fresh.
+- Engine-side decoded values cross the boundary only when authorized by [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md) and the source frame is fresh.
 - Helm-side NMEA messages are derived data. Their PGN selection remains Candidate until verified on the Garmin target.
 
 ## Data path
@@ -93,7 +93,7 @@ flowchart LR
 ## Evidence status
 
 - Two-node topology and physical separation: **Architectural decision**.
-- RPM, engine temperature and engine-hours SmartCraft mappings: **Verified**, as documented in [`NMEA2000_Mapping.md`](NMEA2000_Mapping.md).
+- RPM, engine temperature and engine-runtime inputs: authorized by [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md), version 1.0.0.
 - Oil-pressure CAN field, fuel rate, engine load and battery-voltage mappings: **not Verified for gateway output**.
 - Candidate NMEA PGNs and Garmin display behavior: **Candidate/TBD** pending bench and target-device tests.
 

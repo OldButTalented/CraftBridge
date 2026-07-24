@@ -24,11 +24,11 @@ CraftBridge does not include:
 - Fault clearing, configuration or ECU programming
 - Proprietary Mercury software, firmware, databases or documentation
 
-Only SmartCraft mappings classified as **Verified** are eligible for gateway output. Candidate, probable or unknown mappings are withheld.
+Only SmartCraft mappings classified as **Verified** in [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md) are eligible for gateway output. Candidate, Strong, Weak and Unknown mappings are withheld.
 
 A verified SmartCraft source does not automatically verify the selected NMEA 2000 destination. PGN selection, field scaling and Garmin presentation require independent bench testing.
 
-Current mapping status is documented in [`NMEA2000_Mapping.md`](NMEA2000_Mapping.md).
+[`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md), currently version 1.0.0, is the sole authority for concrete SmartCraft input definitions. [`NMEA2000_Mapping.md`](NMEA2000_Mapping.md) is authoritative for destination selection, PGN decisions and Garmin verification status.
 
 ## System summary
 
@@ -59,7 +59,8 @@ See [`Safety_ECU_Protection.md`](Safety_ECU_Protection.md) and [`Test_Plan.md`](
 - [`Wiring.md`](Wiring.md) — net-level wiring and pre-power checks
 - [`Firmware_Architecture.md`](Firmware_Architecture.md) — firmware tasks and failure handling
 - [`ESP_NOW_Protocol.md`](ESP_NOW_Protocol.md) — wireless packet format and link behavior
-- [`NMEA2000_Mapping.md`](NMEA2000_Mapping.md) — evidence-gated mapping status
+- [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md) — controlled SmartCraft input definitions
+- [`NMEA2000_Mapping.md`](NMEA2000_Mapping.md) — NMEA destination, PGN and Garmin verification status
 - [`BOM.md`](BOM.md) — bill of materials and component status
 - [`Test_Plan.md`](Test_Plan.md) — staged verification and approval gates
 - [`Safety_ECU_Protection.md`](Safety_ECU_Protection.md) — ECU and bus protection rules

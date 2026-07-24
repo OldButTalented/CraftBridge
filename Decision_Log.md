@@ -31,6 +31,7 @@
 | GW-018 | 2026-07-19 | TBD | ESP-NOW channel, rate, encryption keys, retry and stale thresholds | Requires RF survey and fault testing |
 | GW-019 | 2026-07-19 | TBD | NMEA library, identity values, engine instance, PGN periods and address strategy | Requires implementation and Garmin compatibility testing |
 | GW-020 | 2026-07-19 | TBD | Fuse ratings, buck converters, TVS/protection and enclosure | Requires measured loads and marine electrical review |
+| GW-021 | 2026-07-24 | Accepted | `SMARTCRAFT_INPUT_CONTRACT.md` is the sole authority for concrete SmartCraft input definitions | Establishes one controlled WP7-to-CraftBridge interface and prevents competing CAN or byte definitions |
 
 ## Decision-change rule
 

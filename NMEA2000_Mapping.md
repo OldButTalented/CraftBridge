@@ -2,24 +2,23 @@
 
 ## Evidence rule
 
-This document separates SmartCraft source evidence from NMEA destination decisions.
+This document is authoritative for NMEA destination selection, PGN decisions and Garmin verification status. It does not define SmartCraft CAN inputs.
 
-- A SmartCraft mapping may be classified as **Verified** when supported by reproducible project evidence.
+- [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md), version 1.0.0, is the sole authority for concrete SmartCraft input definitions.
 - The choice of NMEA PGN, field, units, rate, instance and Garmin presentation remains **Candidate** until independently tested.
-- Unknown or non-Verified SmartCraft fields are withheld from production NMEA output.
-- Mercury Connect Mobile displaying or estimating fuel consumption is a **Verified observation**, while the existence of a distinct direct fuel-flow, fuel-rate, injector-time or engine-load signal on CAN remains **Unknown**. The application may calculate consumption from RPM and an internal engine model (**Possible**).
+- Signals not authorized by the current SmartCraft input contract are withheld from production NMEA output.
 
 ## Initial mapping matrix
 
 | Information | SmartCraft source status | Normalized field | Candidate NMEA destination | Gateway status |
 |---|---|---|---|---|
-| Engine speed | Verified: `0x170/D1=0x00/D2:D3`, big-endian, 1 RPM/bit | `rpm` | PGN 127488 Engine Parameters, Rapid Update | Candidate; replay and Garmin verification required |
-| Engine temperature | Verified: `0x1A0/D1=0x07/D3`, 1 degree C/bit | `engine_temp_centi_c` | PGN 127489 Engine Parameters, Dynamic | Candidate; exact temperature field/library API and Garmin presentation TBD |
-| Engine hours | Verified: `0x1A0/D1=0x02` and synchronized `0x1E0/D1=0x00`, minutes | `engine_runtime_minutes` | PGN 127489 Engine Parameters, Dynamic | Candidate; source-instance choice and unit conversion TBD |
-| Oil pressure | Information/presentation Verified; concrete CAN mapping Unknown | Not present in v1 packet | PGN 127489 is a possible future destination | Withheld |
-| Fuel rate / engine load | Connect Mobile display/estimate is a Verified observation; distinct CAN signal Unknown | Not present in v1 packet | PGN 127489 is a possible future destination | Withheld |
-| Battery voltage | Weak SmartCraft hypothesis | Not present in v1 packet | PGN 127489 is a possible future destination | Withheld |
-| Throttle, gear, IAC | Unknown mappings | Not present | TBD | Withheld |
+| Engine speed | Authorized by SmartCraft Input Contract v1.0.0 | `rpm` | PGN 127488 Engine Parameters, Rapid Update | Candidate; replay and Garmin verification required |
+| Engine temperature | Authorized by SmartCraft Input Contract v1.0.0 | `engine_temp_centi_c` | PGN 127489 Engine Parameters, Dynamic | Candidate; exact temperature field/library API and Garmin presentation TBD |
+| Engine runtime | Authorized by SmartCraft Input Contract v1.0.0 | `engine_runtime_minutes` | PGN 127489 Engine Parameters, Dynamic | Candidate; source-instance choice and unit conversion TBD |
+| Oil pressure | Not authorized by SmartCraft Input Contract v1.0.0 | Not present in v1 packet | PGN 127489 is a possible future destination | Withheld |
+| Fuel rate / engine load | Not authorized by SmartCraft Input Contract v1.0.0 | Not present in v1 packet | PGN 127489 is a possible future destination | Withheld |
+| Battery voltage | Not authorized by SmartCraft Input Contract v1.0.0 | Not present in v1 packet | PGN 127489 is a possible future destination | Withheld |
+| Throttle, gear, IAC | Not authorized by SmartCraft Input Contract v1.0.0 | Not present | TBD | Withheld |
 
 The PGN names/numbers above are design candidates and do not claim Garmin Echomap compatibility for this installation.
 
@@ -33,7 +32,7 @@ Exact calling conventions depend on the selected NMEA 2000 library and must be c
 | Temperature in 0.01 degree C | Convert to degrees C or kelvin as required by library (`K = C + 273.15`) | Candidate |
 | Runtime minutes | Convert to the library's required duration unit, likely seconds | Candidate |
 
-Do not apply a second scaling factor to values already normalized by the verified SmartCraft decoder.
+Do not apply a second scaling factor to values already normalized according to the SmartCraft input contract.
 
 ## NMEA node behavior
 
@@ -75,7 +74,7 @@ Those are plausible real values and would hide a link failure.
 
 ## References
 
-- Source evidence and confidence status are summarized in this document. Supporting raw captures and analysis notes may be published separately when reviewed for public release.
+- SmartCraft source definitions and upstream evidence control are maintained exclusively in [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md).
 - Garmin NMEA 2000 technical reference: https://www8.garmin.com/manuals/webhelp/GUID-1415AAD0-FE63-42A6-8F8D-DB713D616122/EN-US/Technical_Reference_for_Garmin_NMEA_2000_Products_EN-US.pdf
 - The normative NMEA 2000 standard is not included in this repository and may require licensed access.
 

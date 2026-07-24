@@ -70,6 +70,8 @@ Physical receive-only behavior proven independently of firmware state.
 
 Feed known CAN frames on the isolated bench bus.
 
+[`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md), version 1.0.0, is the sole source of expected SmartCraft decoder definitions.
+
 - Stopped, idle and approximately 2000 RPM cases.
 - Engine-temperature values covering the verified reference range.
 - Engine-hours minute transitions.
@@ -78,8 +80,8 @@ Feed known CAN frames on the isolated bench bus.
 
 Expected behavior:
 
-- Verified mappings decode exactly.
-- Candidate/Unknown fields never set valid output bits.
+- Contract-authorized inputs decode exactly.
+- Candidate, Strong, Weak and Unknown mappings never set valid output bits.
 - Malformed frames increment diagnostics without changing the last valid value.
 - Values become stale according to the reviewed timeout policy.
 
@@ -131,13 +133,13 @@ Requires explicit approval after phases 0–7.
 - First connect the engine node with ESP-NOW and helm NMEA output disabled.
 - Confirm measured SmartCraft termination/loading is unchanged.
 - Confirm listen-only reception at the independently verified bitrate.
-- Compare decoded Verified values with the documented reference method and preserved source captures.
+- Compare decoded values with SmartCraft Input Contract v1.0.0 and the preserved upstream evidence.
 - Monitor CAN error counters and physical waveforms.
 - Disconnect immediately on any bus disturbance, warning or unexpected behavior.
 
 ### Exit gate
 
-Passive node coexists without measurable disturbance and reproduces Verified values.
+Passive node coexists without measurable disturbance and reproduces the contract-authorized values.
 
 ## Phase 9 — end-to-end live demonstration
 
