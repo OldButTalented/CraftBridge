@@ -1,0 +1,47 @@
+# Operating-system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# ESP32 build outputs
+build/
+.pio/
+.arduinoIDE/
+*.elf
+*.bin
+*.hex
+*.map
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+__pycache__/
+*.pyc
+
+# Local logs
+*.log
+
+# Credentials and private configuration
+.env
+.env.*
+!.env.example
+secrets.h
+secrets.hpp
+credentials.h
+credentials.hpp
+keys/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local machine configuration
+local_config.*
