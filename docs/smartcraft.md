@@ -2,6 +2,8 @@
 
 This document is the public technical baseline needed to implement or adapt CraftBridge. It describes independently observed behavior on one tested installation; it is not an official Mercury specification.
 
+[SMARTCRAFT_INPUT_CONTRACT.md version 1.1.0](../SMARTCRAFT_INPUT_CONTRACT.md) is the sole authoritative source for concrete SmartCraft input mappings and normalized semantics. This document provides protocol/session context and must not be used as a competing signal-definition source.
+
 ## Evidence scope
 
 - **Tested engine:** 2006-generation Mercury 40 EFI FourStroke
@@ -101,17 +103,27 @@ After successful startup, with no further SmartCraft protocol TX, the tested ECU
 
 No `0x1E0` or `0x1F0` traffic was required or observed in the standalone runs. The expanded state persisted through a complete 300-second observation with zero post-startup SmartCraft transmissions. This verifies that no periodic keepalive was required within that interval; it does not prove indefinite, ignition-cycle, or power-cycle persistence.
 
-## Signal mappings
+## Contracted input set
 
-| Signal | Mapping | Evidence |
-|---|---|---|
-| RPM | `0x170/page 00/D2:D3`, unsigned big-endian, 1 RPM/bit | Verified; present in fresh baseline |
-| Engine runtime | `0x1A0/page 02/D4:D5`, unsigned big-endian minutes; hours = raw / 60 | Verified; expanded state required |
-| Coolant temperature | `0x1A0/page 07/D3`, 1 °C/bit | Verified; expanded state required |
-| Oil status | tested engine has a binary pressure switch; `0x1A0/page 05/D4:D5` correlation exists | Candidate/Strong; physical byte/bit not verified |
-| Fuel | unresolved | Unknown |
+The controlled version 1.1.0 contract authorizes six tested-ECU inputs: RPM, engine coolant temperature, engine runtime, oil-pressure status, ECU supply/battery voltage and instantaneous fuel flow.
 
-Do not publish candidate fields as valid production data.
+Oil is a filtered representation of a binary pressure-switch state, not analog pressure. Fuel is verified against synchronized Connect Mobile display evidence rather than a physical flow meter. The repository currently implements none of the six decoders or normalized fields.
+
+All concrete CAN IDs, pages, byte fields, encodings, scales and validity semantics are maintained only in [SMARTCRAFT_INPUT_CONTRACT.md](../SMARTCRAFT_INPUT_CONTRACT.md).
+
+## Session coexistence design requirement
+
+Status: **DESIGN DECISION — NOT IMPLEMENTED**.
+
+CraftBridge follows a coexistence-first policy: after IGN ON it waits and monitors for the required expanded producer state, gives Connect Mobile the first opportunity to establish it, remains passive when the required pages are already present, and performs standalone initialization only after a defined timeout. During operation, a single missed frame does not trigger recovery; required expanded pages must remain absent beyond a defined freshness timeout before controlled re-establishment.
+
+The approximately 5.8-second Connect startup delay is an observation on the tested setup and a design reference, not a universal Mercury protocol constant. An IGN OFF/session reset requires a new establishment.
+
+## Non-normative architectural interpretation
+
+**PLAUSIBLE ARCHITECTURAL INTERPRETATION — NOT VERIFIED PROTOCOL FACT.** Addressed 29-bit traffic is usefully modeled as a management/session/control plane; `0x170` and `0x1A0` are the primary contracted engine-data producer families; `0x673` appears auxiliary/presence/session-related; and `0x1E0`/`0x1F0` appear as extra or capability-specific Connect-expanded families. CraftBridge needs target-data coverage, not full-bus equivalence.
+
+The ECU may calculate instantaneous fuel rate from injection-control information and calibration, and Connect Mobile may integrate instantaneous flow for accumulated consumption. This is a plausible interpretation, not a reverse-engineered internal algorithm.
 
 ## Adapting to another engine
 

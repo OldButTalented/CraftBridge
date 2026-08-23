@@ -10,51 +10,66 @@ The intended system uses two ESP32 nodes. The Engine Node interfaces with SmartC
 
 ## Current status
 
-This repository currently contains the system design, hardware requirements, verified SmartCraft findings, and an implementation/test specification. **It does not yet contain buildable Engine Node or Helm Node firmware, PCB design files, or a released wiring harness.**
+This repository currently contains the system design, hardware requirements, verified SmartCraft findings and an implementation/test specification. **It does not contain buildable Engine Node or Helm Node firmware, PCB design files or a released wiring harness.** Track-3 output implementation has not started.
 
-Protocol behavior and firmware capability are deliberately separated:
+Protocol readiness and implementation readiness are deliberately separated:
 
 | Capability | Protocol / ECU evidence | Current CraftBridge firmware |
 |---|---|---|
-| Read fresh ECU producer pages | Physically observed | Not implemented in this repository |
-| Standalone session establishment | Physically verified twice on the tested ECU | Not implemented in this repository |
-| Live challenge responses | Exact capture match and physically accepted | Not implemented in this repository |
-| RPM decoding | Verified | Not implemented in this repository |
-| Runtime and coolant decoding after startup | Verified | Not implemented in this repository |
-| ESP-NOW transport | Specified architecture | Not implemented in this repository |
-| NMEA 2000 output to Garmin/ECHOMAP | Candidate mapping and test plan | Not implemented or target-verified |
+| Standalone expanded producer state | Physically verified twice on tested ECU | Not implemented |
+| RPM input | Verified mapping available | Not implemented |
+| Coolant-temperature input | Verified mapping available | Not implemented |
+| Runtime input | Verified mapping available | Not implemented |
+| Oil-pressure status input | Verified mapping available | Not implemented |
+| Battery/ECU supply-voltage input | Verified mapping available | Not implemented |
+| Instantaneous fuel-flow input | Verified against Connect Mobile reference | Not implemented |
+| Normalized engine-data model | Contracted | Not implemented |
+| ESP-NOW transport | Specified architecture | Not implemented |
+| NMEA 2000 / Garmin output | Track 3 not started | Not implemented or target-verified |
+
+## Controlled SmartCraft inputs
+
+[SMARTCRAFT_INPUT_CONTRACT.md version 1.1.0](SMARTCRAFT_INPUT_CONTRACT.md) is the sole authoritative source in this repository for concrete SmartCraft CAN IDs, pages, byte fields, encodings, scales and normalized input semantics.
+
+The six contracted inputs are:
+
+- RPM;
+- engine coolant temperature;
+- engine runtime;
+- oil-pressure status from the tested engine's binary switch;
+- ECU supply / battery voltage;
+- instantaneous fuel flow.
+
+Oil is status information, not analog kPa. Fuel is verified against synchronized Connect Mobile reference, not a laboratory flow meter. Accumulated fuel is not a separately verified raw ECU input.
 
 ## Tested engine and compatibility
 
-The published SmartCraft results were physically verified on a 2006-generation Mercury 40 EFI FourStroke using the ECM-555/PCM-555 family. They are not a universal Mercury specification.
+The published SmartCraft results were verified on an approximately 2006-model-year Mercury 40 EFI FourStroke in the ECM-555/PCM-555 family. They are not a universal Mercury specification.
 
-The standalone 30-transmission startup, its three live response transforms, and the expanded producer state are verified on that ECU. Related engines may differ in identity/profile responses, challenge handling, timing, producer pages, or signal layout. Test with live challenges from the current ECU session; never replay historical response bytes as constants.
+The standalone startup and expanded producer state are verified on that ECU. Related engines may differ in identity/profile responses, challenge handling, timing, producer pages or signal layout. Future compatibility contributions must preserve tested-ECU evidence while recording variant-specific results separately.
 
-## Verified SmartCraft data
+## Session coexistence
 
-| Signal | Source | Encoding |
-|---|---|---|
-| Engine speed | `0x170`, page `00`, `D2:D3` | big-endian unsigned 16-bit, 1 RPM/bit |
-| Engine runtime | `0x1A0`, page `02`, `D4:D5` | big-endian unsigned 16-bit minutes; hours = raw / 60 |
-| Coolant temperature | `0x1A0`, page `07`, `D3` | 1 °C/bit |
+The controlled contract records a **COEXISTENCE FIRST** firmware design decision. CraftBridge should give Connect Mobile the first opportunity to establish the expanded producer state, remain passive when required pages already exist, initialize standalone only after a defined wait/timeout, and recover only after a sustained missing-data timeout. The approximately 5.8-second Connect startup delay is an observation from the tested setup, not a universal protocol constant.
 
-The tested engine uses a binary oil-pressure switch. A CAN candidate exists, but the physical byte/bit mapping is not verified. Fuel mapping remains unresolved.
+This state machine is **not implemented in the current repository**.
 
 ## Hardware overview
 
-The intended prototype requires two ESP32-WROOM boards, appropriate CAN transceivers, protected power supplies, a non-destructive SmartCraft tap, and a correctly powered and terminated NMEA 2000 segment. Component choices, pinout, protection, and marine suitability require final engineering before installation.
+The intended prototype requires two ESP32-WROOM boards, appropriate CAN transceivers, protected power supplies, a non-destructive SmartCraft tap, and a correctly powered and terminated NMEA 2000 segment. Component choices, pinout, protection and marine suitability require final engineering before installation.
 
 See:
 
+- [Controlled SmartCraft input contract](SMARTCRAFT_INPUT_CONTRACT.md)
 - [Architecture and hardware](docs/architecture-and-hardware.md)
-- [SmartCraft protocol and signal findings](docs/smartcraft.md)
-- [Implementation, build, and test status](docs/build-and-test.md)
+- [SmartCraft protocol findings](docs/smartcraft.md)
+- [Implementation, build and test status](docs/build-and-test.md)
 - [Contributing](CONTRIBUTING.md)
 - [Disclaimer](DISCLAIMER.md)
 
 ## Safety boundary
 
-CraftBridge is not a transparent CAN bridge, diagnostic tool, calibration interface, or fuzzing platform. An implementation must transmit only the documented SmartCraft startup frames, use response gates, calculate responses from the current live challenges, and abort on unexpected directed traffic or timeout. It must not expose arbitrary SmartCraft transmit or diagnostic/control passthrough.
+CraftBridge is not a transparent CAN bridge, diagnostic tool, calibration interface or fuzzing platform. An implementation must transmit only the documented SmartCraft startup frames, use response gates, calculate responses from current live challenges, and abort on unexpected directed traffic or timeout. It must not expose arbitrary SmartCraft transmit or diagnostic/control passthrough.
 
 This is experimental, uncertified equipment. Do not use it as the sole source of safety-critical engine information. See [DISCLAIMER.md](DISCLAIMER.md).
 

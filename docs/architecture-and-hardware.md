@@ -1,5 +1,7 @@
 # Architecture and hardware
 
+[SMARTCRAFT_INPUT_CONTRACT.md version 1.1.0](../SMARTCRAFT_INPUT_CONTRACT.md) controls the six normalized SmartCraft inputs. This document controls architecture/hardware context and does not redefine their CAN mappings.
+
 ## System architecture
 
 ```mermaid
@@ -18,10 +20,12 @@ The wireless normalized-data link is the only path between the two CAN domains. 
 Responsibilities:
 
 - interface with 250 kbit/s SmartCraft CAN;
-- establish the documented standalone session when expanded pages are required;
+- apply the documented coexistence-first policy and establish the standalone session only when required expanded pages are absent after the defined wait/timeout;
 - decode only explicitly supported ID/page/field combinations;
 - attach validity, boot identity, sequence, and source time;
 - transmit normalized snapshots over ESP-NOW.
+
+The coexistence-first session policy is a design requirement, not current firmware behavior. The observed approximately 5.8-second Connect delay is a setup-specific design reference, not a universal constant.
 
 The verified startup requires SmartCraft transmission, so the earlier passive-RX-only hardware concept is obsolete for a full standalone implementation. A final Engine Node design needs a bidirectional, 3.3 V-compatible CAN transceiver, correct standby control, no added termination on an already terminated SmartCraft network, and hardware/software controls that prevent arbitrary transmission. Exact transceiver, GPIOs, protection, and connector pinout are not yet released.
 
@@ -38,7 +42,9 @@ The candidate transceiver is an MCP2562 operated with `VDD = 5 V` and `VIO = 3.3
 
 ## ESP-NOW data contract
 
-The implementation should use a versioned fixed-width packet containing:
+The contracted normalized input names are `rpm`, `coolant_temperature_c`, `runtime_hours`, `oil_pressure_ok`, `battery_voltage_v` and `fuel_flow_lph`. None is implemented in the current repository.
+
+The later implementation should use a versioned fixed-width packet containing:
 
 - protocol version and packet length;
 - Engine Node boot ID and sequence number;
@@ -51,7 +57,7 @@ A new boot ID starts a new sequence epoch. Link loss or stale source data makes 
 
 ## NMEA 2000 output
 
-The planned initial destinations are:
+Track 3 has not started. The following pre-existing destinations remain candidates only; they are not authorized or verified by the SmartCraft input contract:
 
 | SmartCraft value | Candidate NMEA 2000 destination | Status |
 |---|---|---|
@@ -59,7 +65,7 @@ The planned initial destinations are:
 | Runtime | PGN 127489, Engine Parameters Dynamic | Candidate; field/library verification pending |
 | Coolant temperature | PGN 127489, Engine Parameters Dynamic | Candidate; field/library verification pending |
 
-Do not infer NMEA verification from a verified SmartCraft mapping. PGN field layout, units, source address, engine instance, product identity, transmission periods, unavailable-value representation, and Garmin presentation all require independent validation against the selected NMEA library and target device.
+No NMEA/output implementation currently exists for any of the six contracted inputs. Do not infer NMEA verification from a verified SmartCraft mapping. PGN field layout, units, source address, engine instance, product identity, transmission periods, unavailable-value representation, and Garmin presentation all require independent validation against the selected NMEA library and target device.
 
 ## Electrical topology
 

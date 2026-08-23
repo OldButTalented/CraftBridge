@@ -2,7 +2,7 @@
 
 ## What can be built today
 
-There is currently no firmware source, PlatformIO/Arduino project, PCB/CAD package, or released pinout in this repository. Therefore there is no honest end-to-end build or flash command yet. The documents define the implementation target and verified protocol inputs for contributors.
+There is currently no firmware source, PlatformIO/Arduino project, PCB/CAD package, or released pinout in this repository. Therefore there is no honest end-to-end build or flash command yet. The documents define the implementation target. [SMARTCRAFT_INPUT_CONTRACT.md version 1.1.0](../SMARTCRAFT_INPUT_CONTRACT.md) is the sole authority for the six verified protocol inputs.
 
 A release must not be described as buildable until it contains at minimum:
 
@@ -13,6 +13,19 @@ A release must not be described as buildable until it contains at minimum:
 - GPIO/pinout and schematic references;
 - unit/replay tests and expected results;
 - flash and provisioning instructions.
+
+## Current six-signal implementation audit
+
+| Signal | Verified mapping available | Decoder | Normalized field | ESP-NOW transport | NMEA/output |
+|---|---|---|---|---|---|
+| RPM | Yes | No | No | No | No |
+| Coolant temperature | Yes | No | No | No | No |
+| Runtime | Yes | No | No | No | No |
+| Oil-pressure status | Yes | No | No | No | No |
+| Battery voltage | Yes | No | No | No | No |
+| Instantaneous fuel flow | Yes | No | No | No | No |
+
+Repository audit basis: no firmware source, build project, decoder, normalized data model, ESP-NOW implementation or NMEA output exists. This matrix records the starting point; it does not start Track 3.
 
 ## Recommended source layout
 
@@ -39,8 +52,9 @@ This is guidance, not a statement that these files already exist.
 - Use 250 kbit/s CAN and explicit acceptance filters.
 - Implement the 30-step startup as a deterministic response-gated state machine.
 - Calculate the three response values from live big-endian challenges.
-- Provide no automatic retry loop; return to a safe idle/error state after timeout or unexpected directed traffic.
-- Decode only verified ID/page/field combinations with DLC and bounds checks.
+- Apply coexistence-first session handling: wait and monitor, remain passive when another node has established required pages, and recover only after a defined sustained missing-page timeout; one missed frame is not a recovery trigger.
+- Provide no blind retry loop; return to a safe idle/error state after timeout or unexpected directed traffic.
+- Decode only the six inputs authorized by contract version 1.1.0, with DLC, page, bounds, freshness and validity checks.
 - Publish normalized values with validity, source age, boot ID, and sequence.
 - Provide no arbitrary raw-frame transmit or diagnostic/control interface.
 
