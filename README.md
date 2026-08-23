@@ -1,81 +1,63 @@
 # CraftBridge
 
-## Purpose
+CraftBridge is an independent, open engineering project for presenting selected Mercury SmartCraft engine data on Garmin/ECHOMAP displays through NMEA 2000.
 
-CraftBridge is an experimental two-node ESP32 gateway that transfers selected, verified marine engine values from a passively monitored SmartCraft CAN network to a separate NMEA 2000 network and Garmin Echomap.
+```text
+SmartCraft CAN -> Engine Node -> ESP-NOW -> Helm Node -> NMEA 2000 -> Garmin/ECHOMAP
+```
 
-The engine-side interface is physically receive-only. CraftBridge does not transmit, acknowledge or inject frames onto the SmartCraft network.
-
-## Scope
-
-CraftBridge includes:
-
-- Passive SmartCraft CAN reception
-- Decoding of independently verified engine values
-- Normalized telemetry over ESP-NOW
-- NMEA 2000 output on a separate CAN network
-- Hardware, firmware, wiring and test documentation
-
-CraftBridge does not include:
-
-- CDS/DDT service-port work
-- Diagnostic protocol reverse engineering
-- Diacom analysis
-- Fault clearing, configuration or ECU programming
-- Proprietary Mercury software, firmware, databases or documentation
-
-Only SmartCraft mappings classified as **Verified** in [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md) are eligible for gateway output. Candidate, Strong, Weak and Unknown mappings are withheld.
-
-A verified SmartCraft source does not automatically verify the selected NMEA 2000 destination. PGN selection, field scaling and Garmin presentation require independent bench testing.
-
-[`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md), currently version 1.0.0, is the sole authority for concrete SmartCraft input definitions. [`NMEA2000_Mapping.md`](NMEA2000_Mapping.md) is authoritative for destination selection, PGN decisions and Garmin verification status.
-
-## System summary
-
-1. The engine-side ESP32 listens passively to SmartCraft CAN through a physically receive-only SN65HVD230 interface.
-2. It decodes an allowlist of verified values and sends normalized, versioned snapshots over ESP-NOW.
-3. The helm-side ESP32 validates packet integrity, sequence and freshness.
-4. Eligible values are mapped to candidate NMEA 2000 PGNs and transmitted through an MCP2562.
-5. Garmin Echomap and the gateway operate on a short, externally powered NMEA 2000 segment with 120-ohm termination at both physical ends.
-
-The master architecture diagram is in [`Architecture_Overview.md`](Architecture_Overview.md).
-
-## Safety principles
-
-- The SmartCraft interface must be physically incapable of transmitting, even if firmware crashes.
-- SN65HVD230 `D/TXD` has no ESP32 connection and is hard-wired to the recessive state.
-- No additional termination is connected to the SmartCraft bus.
-- SmartCraft CAN and NMEA 2000 are separate electrical domains.
-- Only normalized values cross the wireless ESP-NOW link.
-- Initial testing uses replay or simulation rather than a live engine bus.
-- Stale or invalid values are suppressed or marked unavailable, never silently replaced with zero.
-
-See [`Safety_ECU_Protection.md`](Safety_ECU_Protection.md) and [`Test_Plan.md`](Test_Plan.md).
-
-## Documentation
-
-- [`Architecture_Overview.md`](Architecture_Overview.md) — system architecture and trust boundaries
-- [`Hardware_Design.md`](Hardware_Design.md) — node hardware and electrical design
-- [`Wiring.md`](Wiring.md) — net-level wiring and pre-power checks
-- [`Firmware_Architecture.md`](Firmware_Architecture.md) — firmware tasks and failure handling
-- [`ESP_NOW_Protocol.md`](ESP_NOW_Protocol.md) — wireless packet format and link behavior
-- [`SMARTCRAFT_INPUT_CONTRACT.md`](SMARTCRAFT_INPUT_CONTRACT.md) — controlled SmartCraft input definitions
-- [`NMEA2000_Mapping.md`](NMEA2000_Mapping.md) — NMEA destination, PGN and Garmin verification status
-- [`BOM.md`](BOM.md) — bill of materials and component status
-- [`Test_Plan.md`](Test_Plan.md) — staged verification and approval gates
-- [`Safety_ECU_Protection.md`](Safety_ECU_Protection.md) — ECU and bus protection rules
-- [`Decision_Log.md`](Decision_Log.md) — architectural decisions and rationale
+The intended system uses two ESP32 nodes. The Engine Node interfaces with SmartCraft, decodes an explicit signal allowlist, and sends normalized values wirelessly. The Helm Node validates freshness and emits selected NMEA 2000 PGNs on a separate CAN network. SmartCraft and NMEA 2000 are never electrically bridged.
 
 ## Current status
 
-Private development.
+This repository currently contains the system design, hardware requirements, verified SmartCraft findings, and an implementation/test specification. **It does not yet contain buildable Engine Node or Helm Node firmware, PCB design files, or a released wiring harness.**
 
-Architecture and initial documentation exist. GPIO assignment, schematic and PCB design, firmware implementation, NMEA 2000 library selection and live installation remain under development.
+Protocol behavior and firmware capability are deliberately separated:
 
-## Independence and trademarks
+| Capability | Protocol / ECU evidence | Current CraftBridge firmware |
+|---|---|---|
+| Read fresh ECU producer pages | Physically observed | Not implemented in this repository |
+| Standalone session establishment | Physically verified twice on the tested ECU | Not implemented in this repository |
+| Live challenge responses | Exact capture match and physically accepted | Not implemented in this repository |
+| RPM decoding | Verified | Not implemented in this repository |
+| Runtime and coolant decoding after startup | Verified | Not implemented in this repository |
+| ESP-NOW transport | Specified architecture | Not implemented in this repository |
+| NMEA 2000 output to Garmin/ECHOMAP | Candidate mapping and test plan | Not implemented or target-verified |
 
-CraftBridge is an independent experimental project.
+## Tested engine and compatibility
 
-It is not affiliated with, endorsed by, sponsored by or approved by Mercury Marine, Garmin or the National Marine Electronics Association.
+The published SmartCraft results were physically verified on a 2006-generation Mercury 40 EFI FourStroke using the ECM-555/PCM-555 family. They are not a universal Mercury specification.
 
-SmartCraft, Mercury, Garmin, Echomap and NMEA 2000 are names or trademarks belonging to their respective owners. Their use here is solely descriptive and does not imply certification or official compatibility.
+The standalone 30-transmission startup, its three live response transforms, and the expanded producer state are verified on that ECU. Related engines may differ in identity/profile responses, challenge handling, timing, producer pages, or signal layout. Test with live challenges from the current ECU session; never replay historical response bytes as constants.
+
+## Verified SmartCraft data
+
+| Signal | Source | Encoding |
+|---|---|---|
+| Engine speed | `0x170`, page `00`, `D2:D3` | big-endian unsigned 16-bit, 1 RPM/bit |
+| Engine runtime | `0x1A0`, page `02`, `D4:D5` | big-endian unsigned 16-bit minutes; hours = raw / 60 |
+| Coolant temperature | `0x1A0`, page `07`, `D3` | 1 °C/bit |
+
+The tested engine uses a binary oil-pressure switch. A CAN candidate exists, but the physical byte/bit mapping is not verified. Fuel mapping remains unresolved.
+
+## Hardware overview
+
+The intended prototype requires two ESP32-WROOM boards, appropriate CAN transceivers, protected power supplies, a non-destructive SmartCraft tap, and a correctly powered and terminated NMEA 2000 segment. Component choices, pinout, protection, and marine suitability require final engineering before installation.
+
+See:
+
+- [Architecture and hardware](docs/architecture-and-hardware.md)
+- [SmartCraft protocol and signal findings](docs/smartcraft.md)
+- [Implementation, build, and test status](docs/build-and-test.md)
+- [Contributing](CONTRIBUTING.md)
+- [Disclaimer](DISCLAIMER.md)
+
+## Safety boundary
+
+CraftBridge is not a transparent CAN bridge, diagnostic tool, calibration interface, or fuzzing platform. An implementation must transmit only the documented SmartCraft startup frames, use response gates, calculate responses from the current live challenges, and abort on unexpected directed traffic or timeout. It must not expose arbitrary SmartCraft transmit or diagnostic/control passthrough.
+
+This is experimental, uncertified equipment. Do not use it as the sole source of safety-critical engine information. See [DISCLAIMER.md](DISCLAIMER.md).
+
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE).
