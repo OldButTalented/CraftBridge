@@ -1,16 +1,18 @@
 # CraftBridge
 
-CraftBridge is an independent, open engineering project for presenting selected Mercury SmartCraft engine data on Garmin/ECHOMAP displays through NMEA 2000.
+CraftBridge is an independent, open engineering project for turning selected Mercury SmartCraft engine data into a normalized six-signal model for browser, display and gateway applications.
 
 ```text
-SmartCraft CAN -> Engine Node -> ESP-NOW -> Helm Node -> NMEA 2000 -> Garmin/ECHOMAP
+SmartCraft CAN -> Engine ESP32 -> normalized engine data
+                                      |-> Wi-Fi AP / web UI -> phone or browser
+                                      `-> ESP-NOW -> display node or NMEA 2000 / Garmin node
 ```
 
-The intended system uses two ESP32 nodes. The Engine Node interfaces with SmartCraft, decodes an explicit signal allowlist, and sends normalized values wirelessly. The Helm Node validates freshness and emits selected NMEA 2000 PGNs on a separate CAN network. SmartCraft and NMEA 2000 are never electrically bridged.
+The Engine Node establishes or reuses the required SmartCraft session, decodes an explicit six-signal allowlist and exposes only normalized values. Planned outputs are a local web display and ESP-NOW transport to either a SmartGauge-style display or a separate NMEA 2000/Garmin node. None of these firmware or output paths is implemented in this repository. SmartCraft and NMEA 2000 remain electrically separate.
 
 ## Current status
 
-This repository currently contains the system design, hardware requirements, verified SmartCraft findings and an implementation/test specification. **It does not contain buildable Engine Node or Helm Node firmware, PCB design files or a released wiring harness.** Track-3 output implementation has not started.
+This repository currently contains the system design, hardware requirements, verified SmartCraft findings and an implementation/test specification. **It does not contain buildable Engine Node or downstream-node firmware, PCB design files or a released wiring harness.** Output-interface implementation has not started.
 
 Protocol readiness and implementation readiness are deliberately separated:
 
@@ -25,7 +27,7 @@ Protocol readiness and implementation readiness are deliberately separated:
 | Instantaneous fuel-flow input | Verified against Connect Mobile reference | Not implemented |
 | Normalized engine-data model | Contracted | Not implemented |
 | ESP-NOW transport | Specified architecture | Not implemented |
-| NMEA 2000 / Garmin output | Track 3 not started | Not implemented or target-verified |
+| Web, display and NMEA 2000 / Garmin outputs | Planned architecture only | Not implemented or target-verified |
 
 ## Controlled SmartCraft inputs
 
@@ -33,18 +35,20 @@ Protocol readiness and implementation readiness are deliberately separated:
 
 The six contracted inputs are:
 
-- RPM;
-- engine coolant temperature;
-- engine runtime;
-- oil-pressure status from the tested engine's binary switch;
-- ECU supply / battery voltage;
-- instantaneous fuel flow.
+| Normalized field | SmartCraft source | Conversion | Public evidence status |
+|---|---|---|---|
+| `rpm` | `0x170`, page `00`, `D2:D3` u16be | `rpm = raw` | Verified on tested ECU; baseline traffic |
+| `coolant_temperature_c` | `0x1A0`, page `07`, `D3` | `°C = raw` | Verified on tested ECU; expanded state |
+| `runtime_hours` | `0x1A0`, page `02`, `D4:D5` u16be | `hours = raw / 60` | Verified on tested ECU; expanded state |
+| `oil_pressure_ok` | `0x1A0`, page `05`, `D4:D5` u16be | filtered binary switch status | Verified on tested ECU; not analog pressure |
+| `battery_voltage_v` | `0x1A0`, page `09`, `D5:D6` u16be | `volts = raw × 0.001` | Verified on tested ECU for CraftBridge use |
+| `fuel_flow_lph` | `0x170`, page `01`, `D2:D3` u16be | `l/h = raw × 0.01` | Verified against Connect Mobile reference on tested ECU |
 
-Oil is status information, not analog kPa. Fuel is verified against synchronized Connect Mobile reference, not a laboratory flow meter. Accumulated fuel is not a separately verified raw ECU input.
+Fuel is not independently verified by a laboratory flow meter. Accumulated fuel is not a separately verified raw ECU input.
 
 ## Tested engine and compatibility
 
-The published SmartCraft results were verified on an approximately 2006-model-year Mercury 40 EFI FourStroke in the ECM-555/PCM-555 family. They are not a universal Mercury specification.
+The published SmartCraft results were verified on an approximately 2006-model-year Mercury 40 EFI FourStroke, in the ECM-555/PCM-555 family. They are not a universal Mercury specification.
 
 The standalone startup and expanded producer state are verified on that ECU. Related engines may differ in identity/profile responses, challenge handling, timing, producer pages or signal layout. Future compatibility contributions must preserve tested-ECU evidence while recording variant-specific results separately.
 

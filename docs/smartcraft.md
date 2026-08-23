@@ -6,7 +6,7 @@ This document is the public technical baseline needed to implement or adapt Craf
 
 ## Evidence scope
 
-- **Tested engine:** 2006-generation Mercury 40 EFI FourStroke
+- **Tested engine:** approximately model-year 2006 Mercury 40 EFI FourStroke
 - **ECU family:** ECM-555 / PCM-555
 - **CAN bitrate:** 250 kbit/s
 - **Physical status:** standalone startup completed twice without Connect Mobile
@@ -23,6 +23,17 @@ Before session establishment, the observed producer pages are:
 | `0x170` | `00 03 06 FF` |
 | `0x1A0` | `01 FF` |
 
+RPM is available in this autonomous baseline. The other five contracted inputs require the expanded producer state.
+
+## Directed session traffic
+
+The verified directed pair used during standalone establishment is:
+
+- client-like direction: `0x00000B73`;
+- ECU-response direction: `0x0000730B`.
+
+The low-byte values `0x73` and `0x0B` behave strongly like endpoint identifiers in the tested interactions. Their exact formal addressing semantics are not established, and this is not presented as a standard J1939 session protocol.
+
 ## Standalone startup result
 
 A Python + CANable implementation reproduced the required startup without Connect Mobile:
@@ -32,8 +43,8 @@ A Python + CANable implementation reproduced the required startup without Connec
 - 3 responses calculated from live ECU challenges;
 - 27 response gates;
 - 0 automatic retry paths;
-- 20/20 historical startup structures matched;
-- 2 successful physical standalone runs on the tested ECU.
+- repeated captured startup structures with consistent ordering;
+- physically repeated successful standalone runs on the tested ECU.
 
 This verified ECU behavior is **not implemented in firmware currently published in this repository**.
 
@@ -51,7 +62,7 @@ R = low32(E * multiplier) XOR constant
 | `0x00000B73 : FA 02 06` | `F9 <R32>` | `0xCF88B813` | `0x4353E4D3` |
 | `0x00000B73 : 80 04` | `81 <R32>` | `0xAB20FA1B` | `0x208FB01A` |
 
-Use the live challenge from the current session. Historical response bytes must not be replayed as constants. These values are physically verified on the tested ECU and are likely reusable only within related software/project families until cross-engine testing proves more.
+Use the live challenge from the current session. Historical response bytes must not be replayed as constants. The transforms reproduce all relevant captured exchanges exactly and were accepted in the physical standalone tests. Finding the same primitive in later vendor software does not establish that the tested 2006 ECU is byte-identical to that software. Cross-engine portability remains unverified.
 
 ## Canonical 30-transmission sequence
 
@@ -101,15 +112,38 @@ After successful startup, with no further SmartCraft protocol TX, the tested ECU
 | `0x170` | `00 01 02 03 04 05 06 FF` |
 | `0x1A0` | `00 01 02 03 04 05 06 07 08 09 0A 0B 0C FF` |
 
-No `0x1E0` or `0x1F0` traffic was required or observed in the standalone runs. The expanded state persisted through a complete 300-second observation with zero post-startup SmartCraft transmissions. This verifies that no periodic keepalive was required within that interval; it does not prove indefinite, ignition-cycle, or power-cycle persistence.
+No `0x1E0` or `0x1F0` traffic was required or observed in the standalone runs. The expanded state persisted through a complete 300-second observation with zero post-startup SmartCraft transmissions. This verifies that no periodic keepalive was required within that interval; it does not prove indefinite, ignition-cycle or power-cycle persistence.
 
-## Contracted input set
+During later voltage testing, an IGN/session reset was directly followed by loss of expanded producer pages. A final implementation must therefore monitor required-page freshness and establish a new session after a sustained reset/loss condition.
 
-The controlled version 1.1.0 contract authorizes six tested-ECU inputs: RPM, engine coolant temperature, engine runtime, oil-pressure status, ECU supply/battery voltage and instantaneous fuel flow.
+CraftBridge requires target-data coverage, not replication of every frame seen with Connect Mobile. The expanded `0x170` and `0x1A0` sets contain all six required inputs; additional `0x1E0`, `0x1F0`, `0x673` and management/session traffic are not required for the contracted data set.
 
-Oil is a filtered representation of a binary pressure-switch state, not analog pressure. Fuel is verified against synchronized Connect Mobile display evidence rather than a physical flow meter. The repository currently implements none of the six decoders or normalized fields.
+## Six verified signal mappings
 
-All concrete CAN IDs, pages, byte fields, encodings, scales and validity semantics are maintained only in [SMARTCRAFT_INPUT_CONTRACT.md](../SMARTCRAFT_INPUT_CONTRACT.md).
+[SMARTCRAFT_INPUT_CONTRACT.md version 1.1.0](../SMARTCRAFT_INPUT_CONTRACT.md) remains normative. This table is the synchronized public engineering summary.
+
+| Signal / normalized field | CAN mapping | Conversion | Availability and evidence boundary |
+|---|---|---|---|
+| RPM / `rpm` | `0x170`, page `00`, `D2:D3`, u16be | `rpm = raw`; 1 RPM/bit | Verified on tested ECU; autonomous baseline |
+| Coolant / `coolant_temperature_c` | `0x1A0`, page `07`, `D3` | `temperature_c = raw`; 1 °C/bit | Verified on tested ECU; expanded state |
+| Runtime / `runtime_hours` | `0x1A0`, page `02`, `D4:D5`, u16be minutes | `runtime_hours = raw / 60.0` | Verified on tested ECU; expanded state; `0x1E0/page 00` mirror not required |
+| Oil status / `oil_pressure_ok` | `0x1A0`, page `05`, `D4:D5`, u16be | stable CLOSED (`0x0000`/`0x0001`) = false; stable OPEN (`0x9B82`) = true | Verified filtered binary switch representation; transition values remain invalid; never convert to kPa |
+| Battery / `battery_voltage_v` | `0x1A0`, page `09`, `D5:D6`, u16be | `battery_voltage_v = raw × 0.001` | Verified on tested ECU for charging/status use; ECU supply may differ from battery-terminal DMM |
+| Fuel / `fuel_flow_lph` | `0x170`, page `01`, `D2:D3`, u16be | `fuel_flow_lph = raw × 0.01` | Verified against synchronized Connect Mobile reference; not laboratory flow-meter verification |
+
+### Oil evidence boundary
+
+The tested engine uses a binary oil-pressure switch: below approximately 20 kPa the switch is CLOSED to ground; above approximately 20 kPa it is OPEN. Repeated controlled interventions produced repeatable CAN changes. Short transition/filter values included `0x9B78`, `0x9B5C` and `0x99F4`; the ECU filtering algorithm is unknown. Connect Mobile numeric presentation does not turn this into an analog pressure measurement.
+
+### Battery evidence boundary
+
+The mapping combines multiple Connect Mobile correlations with independent battery-terminal DMM measurements and consistent stopped-versus-charging behavior. It represents ECU supply/battery-system voltage; it does not prove direct measurement at the battery terminals. Approximately 0.1 V practical resolution is sufficient for the intended charging indication.
+
+### Fuel evidence boundary
+
+The mapping explained 35/36 usable synchronized references, 8/8 repeated 0.4-to-0.5 l/h events and 4/4 large excursions. Mean absolute reference error was approximately 0.034 l/h, maximum approximately 0.130 l/h, and observed app lag approximately 0.392-0.856 s with 0.806 s median. Different fuel rates near the same RPM demonstrate that it is not a simple RPM lookup. Accumulated consumption is not a separate verified ECU field; software may later integrate fresh instantaneous flow.
+
+None of the six decoders, normalized fields or downstream transports is implemented in the current repository.
 
 ## Session coexistence design requirement
 

@@ -6,7 +6,7 @@ There is currently no firmware source, PlatformIO/Arduino project, PCB/CAD packa
 
 A release must not be described as buildable until it contains at minimum:
 
-- Engine Node and Helm Node source trees;
+- Engine Node and applicable web/display/gateway source trees;
 - pinned framework, toolchain, board, and library versions;
 - reproducible build commands;
 - example non-secret configuration;
@@ -25,7 +25,7 @@ A release must not be described as buildable until it contains at minimum:
 | Battery voltage | Yes | No | No | No | No |
 | Instantaneous fuel flow | Yes | No | No | No | No |
 
-Repository audit basis: no firmware source, build project, decoder, normalized data model, ESP-NOW implementation or NMEA output exists. This matrix records the starting point; it does not start Track 3.
+Repository audit basis: no firmware source, build project, decoder, normalized data model, ESP-NOW implementation or NMEA output exists. This matrix records the starting point; it does not imply that implementation work has started.
 
 ## Recommended source layout
 

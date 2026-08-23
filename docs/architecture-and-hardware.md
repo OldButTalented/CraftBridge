@@ -7,13 +7,16 @@
 ```mermaid
 flowchart LR
     ECU[Mercury ECU] --- SC[SmartCraft CAN]
-    SC --- EN[Engine Node]
-    EN -. ESP-NOW .-> HN[Helm Node]
+    SC --- EN[Engine ESP32]
+    EN --> MODEL[Normalized six-signal model]
+    MODEL -. Wi-Fi AP / HTTP .-> WEB[Phone / browser]
+    MODEL -. ESP-NOW .-> DISPLAY[SmartGauge-style display node]
+    MODEL -. ESP-NOW .-> HN[NMEA 2000 node]
     HN --- N2K[NMEA 2000]
     N2K --- Garmin[Garmin / ECHOMAP]
 ```
 
-The wireless normalized-data link is the only path between the two CAN domains. Raw CAN frames are not forwarded.
+SmartCraft decoding terminates at the Engine Node. Downstream consumers receive normalized values rather than raw SmartCraft frames. Web output, ESP-NOW transport, the display node and the NMEA 2000/Garmin node are planned variants; none is implemented in the current repository. SmartCraft and NMEA 2000 are separate electrical domains and raw CAN frames are not forwarded.
 
 ## Engine Node
 
@@ -23,7 +26,7 @@ Responsibilities:
 - apply the documented coexistence-first policy and establish the standalone session only when required expanded pages are absent after the defined wait/timeout;
 - decode only explicitly supported ID/page/field combinations;
 - attach validity, boot identity, sequence, and source time;
-- transmit normalized snapshots over ESP-NOW.
+- serve normalized values locally over a planned Wi-Fi/web interface and/or publish versioned snapshots over ESP-NOW.
 
 The coexistence-first session policy is a design requirement, not current firmware behavior. The observed approximately 5.8-second Connect delay is a setup-specific design reference, not a universal constant.
 
@@ -57,7 +60,7 @@ A new boot ID starts a new sequence epoch. Link loss or stale source data makes 
 
 ## NMEA 2000 output
 
-Track 3 has not started. The following pre-existing destinations remain candidates only; they are not authorized or verified by the SmartCraft input contract:
+Output-interface implementation has not started. The following pre-existing destinations remain candidates only; they are not authorized or verified by the SmartCraft input contract:
 
 | SmartCraft value | Candidate NMEA 2000 destination | Status |
 |---|---|---|
@@ -80,7 +83,7 @@ No NMEA/output implementation currently exists for any of the six contracted inp
 
 | Qty | Item | Status / note |
 |---:|---|---|
-| 2 | ESP32-WROOM development boards | Exact boards and GPIOs TBD |
+| 1-2+ | ESP32-WROOM development boards | Engine Node plus optional downstream display/gateway node; exact boards and GPIOs TBD |
 | 1 | 3.3 V-compatible bidirectional CAN transceiver | Engine Node; final part and safety controls TBD |
 | 1 | MCP2562 CAN transceiver | Helm Node candidate; `VDD 5 V`, `VIO 3.3 V` |
 | 2 | Protected 12 V-to-5 V supplies | Marine/transient suitability TBD |

@@ -13,7 +13,7 @@ Contributions are welcome when they improve a reproducible standalone SmartCraft
 
 ## Controlled SmartCraft input boundary
 
-[SMARTCRAFT_INPUT_CONTRACT.md](SMARTCRAFT_INPUT_CONTRACT.md) is the sole authoritative source for concrete SmartCraft input definitions. Contributions may implement its Verified mappings but must not duplicate competing CAN/page/byte definitions elsewhere. A change to the contract requires a new verified upstream evidence conclusion and a versioned contract revision.
+[SMARTCRAFT_INPUT_CONTRACT.md](SMARTCRAFT_INPUT_CONTRACT.md) is the sole authoritative source for concrete SmartCraft input definitions. Contributions may implement its Verified mappings but must not duplicate competing CAN/page/byte definitions elsewhere. A change to the contract requires new verified SmartCraft evidence and a versioned contract revision.
 
 Results from other ECU variants should be reported as separate compatibility evidence; they must not weaken or silently generalize the tested-ECU baseline.
 

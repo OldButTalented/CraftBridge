@@ -6,29 +6,29 @@
 - Previous version: **1.0.0**
 - Revision date: **2026-08-23**
 - Status: **Controlled**
-- Upstream evidence authority: **Mercury ECM-555 SmartCraft WP7 analysis**
-- Upstream evidence reference: **TRACK2_FINAL_BASELINE.md, TRACK2_FINAL_SIGNAL_MAP.csv and TRACK2_FINAL_EVIDENCE_MATRIX.csv**
-- Upstream evidence revision date: **2026-08-23**
-- Upstream integration-validation SHA-256: `01705EA32C733324991992D0306D9A777CA9CAE989997373B402CD7B0E9F4BD9`
+- Evidence authority: **verified SmartCraft evidence baseline for the tested ECU**
+- Evidence baseline: **six-signal mapping and standalone-session baseline approved 2026-08-23**
+- Evidence revision date: **2026-08-23**
+- Evidence integration: **reviewed and approved for public CraftBridge use**
 - Downstream consumer: **CraftBridge**
 
 ## Purpose and authority
 
-This document is the sole controlled interface between the verified SmartCraft findings maintained by the Mercury ECM-555 WP7 analysis and CraftBridge.
+This document is the sole controlled CraftBridge interface to the verified SmartCraft findings for the tested ECU.
 
 It defines protocol inputs that CraftBridge is allowed to implement. A mapping listed as Verified here is not a claim that current CraftBridge firmware implements it. Supporting captures, screenshots, service information and analysis remain outside this repository.
 
 ## Responsibility boundary
 
-The Mercury WP7 evidence baseline owns CAN ID/page/field identification, encoding, scaling, semantic interpretation and evidence promotion or withdrawal.
+The verified SmartCraft evidence baseline controls CAN ID/page/field identification, encoding, scaling, semantic interpretation and evidence promotion or withdrawal.
 
 CraftBridge owns decoder implementation, validity and freshness behavior, normalized internal data, ESP-NOW transport, output selection, NMEA 2000/Garmin verification and gateway tests.
 
-A Verified SmartCraft input does not verify any NMEA 2000 PGN, output field, conversion, transmission rate or Garmin presentation. Track 3 output-interface work is not started by this contract revision.
+A Verified SmartCraft input does not verify any web display, wireless transport, NMEA 2000 PGN, output field, conversion, transmission rate or Garmin presentation. Output-interface implementation is not started by this contract revision.
 
 ## Evidence status
 
-- **Verified** — the mapping and the stated interpretation are established by the referenced WP7 evidence on the tested ECU.
+- **Verified** — the mapping and stated interpretation are established by reproducible evidence on the tested ECU.
 - **Strong** — substantial evidence exists but a requirement for Verified remains unresolved.
 - **Candidate** — plausible and selected for further testing.
 - **Weak** — limited or ambiguous evidence with competing interpretations.
@@ -38,7 +38,7 @@ Only mappings explicitly listed as Verified in this contract may enter a product
 
 ## Tested scope
 
-The mappings are verified on the tested approximately 2006-model-year Mercury 40 EFI FourStroke in the ECM-555 / PCM-555 family. Universal compatibility with other Mercury engines, ECU software or SmartCraft variants is not claimed.
+The mappings are verified on the tested approximately 2006-model-year Mercury 40 EFI FourStroke, in the ECM-555 / PCM-555 family. Universal compatibility with other Mercury engines, ECU software or SmartCraft variants is not claimed.
 
 The notation `D1` through `D8` is one-based payload-byte numbering.
 
@@ -177,7 +177,7 @@ Missing, malformed, stale, unrecognized or unavailable input must be marked inva
 | Battery voltage | Yes | No | No | No | No |
 | Instantaneous fuel flow | Yes | No | No | No | No |
 
-Audit basis: the current repository contains no firmware source or build project. This table records repository state at revision 1.1.0; it is not an implementation plan or Track-3 start.
+Audit basis: the current repository contains no firmware source or build project. This table records repository state at revision 1.1.0; it does not imply that implementation work has started.
 
 ## Producer and session requirements
 
@@ -207,7 +207,7 @@ Policy: **COEXISTENCE FIRST**.
 6. If no working expanded producer state appears after a defined startup timeout, the later firmware may execute the verified standalone initialization.
 7. During operation, monitor freshness of required producer data. One missed frame must not trigger recovery.
 8. If required expanded pages remain absent beyond a defined timeout, attempt a controlled session re-establishment.
-9. After IGN OFF or ECU session reset, require a new session establishment.
+9. After IGN OFF or ECU session reset, require a new session establishment. Expanded pages disappearing after an observed IGN/session reset during voltage testing directly support this requirement.
 
 Exact startup and recovery timeout values remain implementation parameters requiring tests. This revision documents the requirement but implements no state machine.
 
@@ -225,22 +225,22 @@ The ECU may derive instantaneous fuel rate from injection-control information su
 
 ## Change control and repository restrictions
 
-Any technical addition, removal or modification requires a new Verified WP7 conclusion, complete mapping review, contract-version increment and dated revision record. CraftBridge implementation evidence alone cannot promote a mapping.
+Any technical addition, removal or modification requires new verified SmartCraft evidence, complete mapping review, contract-version increment and dated revision record. CraftBridge implementation evidence alone cannot promote a mapping.
 
-This contract must not contain raw CAN logs, Connect Mobile images, relative links to the Mercury repository, CDS/DDT or Diacom content, proprietary software/data, service-manual content, personal paths, serial numbers, credentials or private configuration.
+This contract must not contain raw CAN logs, Connect Mobile images, links to private evidence trees, unrelated diagnostic research, proprietary software/data, personal paths, engine serial numbers, credentials, private configuration or other unique private identifiers.
 
 ## Revision record
 
 ### Version 1.1.0 — 2026-08-23
 
 - Previous version: 1.0.0.
-- Source: completed six-signal Track-2 baseline, revision 2026-08-23.
+- Source: completed six-signal SmartCraft evidence baseline, revision 2026-08-23.
 - Added verified oil-pressure status, battery/ECU supply voltage and instantaneous fuel-flow mappings.
 - Made `0x1A0/page 02` the sole required runtime input; removed the `0x1E0` mirror from required sources.
-- Added normalized six-field model, S3 target-data requirement and coexistence-first session design decision.
+- Added the normalized six-field model, expanded-state target-data requirement and coexistence-first session design decision.
 - Added an explicit audit separating protocol readiness from current firmware/transport/output implementation.
 
 | Version | Date | Change |
 |---|---|---|
 | 1.0.0 | 2026-07-24 | Initial controlled contract with RPM, coolant-temperature and runtime mappings |
-| 1.1.0 | 2026-08-23 | Six-signal Track-2 baseline, S3/session requirements and implementation-status audit |
+| 1.1.0 | 2026-08-23 | Six-signal mapping baseline, expanded-state/session requirements and implementation-status audit |
