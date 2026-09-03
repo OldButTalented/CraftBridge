@@ -36,7 +36,7 @@ The exact mappings and evidence boundaries are defined in the [SmartCraft Input 
 
 ## Build and validation
 
-Open the sketch at `firmware/CraftBridge_Motor_Node_Web_v1_0_0/CraftBridge_Motor_Node_Web_v1_0_0.ino` in Arduino IDE, or run from this `releases/3A` directory:
+Open [`CraftBridge_Motor_Node_Web_v1_0_0.ino`](firmware/CraftBridge_Motor_Node_Web_v1_0_0/CraftBridge_Motor_Node_Web_v1_0_0.ino) directly in Arduino IDE. The exact validated Arduino board and memory settings are listed in the [firmware README](firmware/README.md). Alternatively, run from this `releases/3A` directory:
 
 ```powershell
 pio run -e engine-node-s3-n16r8
