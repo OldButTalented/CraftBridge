@@ -54,7 +54,7 @@ CraftBridge calls the limited producer traffic before authorization **S0** and t
 
 When a fresh S3 session is not already present, the Motor Node performs the physically verified **SmartCraft session authorization handshake**: 30 ordered client transmissions, 27 response gates, and three responses calculated from live ECU challenges. Passing the final gate is followed by passive S3 confirmation; the session is active only when the complete expanded producer set is fresh.
 
-The authoritative human-readable sequence, including all 30 steps, gate responses, challenge-response parameters, and verified calculation examples, is [SmartCraft session authorization handshake](smartcraft-session-authorization.md). The executable firmware table remains authoritative for implementation behavior.
+The authoritative human-readable sequence, including all 30 steps, gate responses, challenge-response parameters, and verified calculation examples, is [SmartCraft session authorization handshake](../../../SMARTCRAFT_SESSION_AUTHORIZATION.md). The executable firmware table remains authoritative for implementation behavior.
 ## Expanded producer state and persistence
 
 After successful startup, with no further SmartCraft protocol TX, the tested ECU produced:

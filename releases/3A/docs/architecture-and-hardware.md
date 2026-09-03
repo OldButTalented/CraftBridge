@@ -32,7 +32,7 @@ The authoritative firmware is `firmware/CraftBridge_Motor_Node_Web_v1_0_0/`. Pin
 
 ## SmartCraft connection and termination
 
-The CAN transceiver provides physical RX and TX between the ESP32-S3 TWAI controller and SmartCraft CAN. TX is required only for the verified [SmartCraft session authorization handshake](smartcraft-session-authorization.md).
+The CAN transceiver provides physical RX and TX between the ESP32-S3 TWAI controller and SmartCraft CAN. TX is required only for the verified [SmartCraft session authorization handshake](../../../SMARTCRAFT_SESSION_AUTHORIZATION.md).
 
 CraftBridge does not add another 120 ohm terminator when connected as a node or tap on an existing, correctly terminated SmartCraft network. An isolated bench CAN segment must instead be terminated correctly at both physical ends before power is applied.
 

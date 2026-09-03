@@ -20,6 +20,8 @@ Option 3A establishes or reuses the verified SmartCraft session, decodes six all
 | [`docs/`](docs/README.md) | SmartCraft contract, session details, architecture and validated build/test status |
 | [`hardware/`](hardware/README.md) | Status of the shared, not-yet-released hardware platform |
 
+The canonical cross-variant description of the startup handshake is [SmartCraft Session Authorization](../../SMARTCRAFT_SESSION_AUTHORIZATION.md).
+
 ## Supported engine data
 
 - Engine RPM

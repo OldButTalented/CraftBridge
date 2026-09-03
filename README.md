@@ -12,6 +12,8 @@ CraftBridge is an independent open-source implementation for accessing selected 
 
 Option 3A provides the validated Motor Node A firmware/software release: SmartCraft session handling, six verified engine inputs, a local Wi-Fi access point, Web UI, diagnostics and JSON output. It is bench validated and real-ECU/boat validated.
 
+The shared technical reference for the session startup is [SmartCraft Session Authorization](SMARTCRAFT_SESSION_AUTHORIZATION.md).
+
 The complete 3A hardware product is **not released**. Options 3A, 3B and 3C will use one shared hardware platform, which will be finalized after the 3B and 3C firmware requirements are known. Schematics, PCB, CAD, BOM and production files will be published later when validated.
 
 ## Choose a path

@@ -1,7 +1,7 @@
 # Option 3A documentation
 
 - [SmartCraft Input Contract 1.3.0](SMARTCRAFT_INPUT_CONTRACT.md)
-- [SmartCraft session authorization handshake](smartcraft-session-authorization.md)
+- [SmartCraft session authorization handshake](../../../SMARTCRAFT_SESSION_AUTHORIZATION.md)
 - [SmartCraft protocol findings](smartcraft.md)
 - [Implementation, build, and test status](build-and-test.md)
 - [Architecture and hardware boundary](architecture-and-hardware.md)

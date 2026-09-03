@@ -69,7 +69,7 @@ Further firmware changes require a concrete verified defect. Hardware developmen
 
 ## Session safety
 
-The complete verified startup conversation is documented in [SmartCraft session authorization handshake](smartcraft-session-authorization.md); this section records implementation and test behavior without duplicating its 30-step table.
+The complete verified startup conversation is documented in [SmartCraft session authorization handshake](../../../SMARTCRAFT_SESSION_AUTHORIZATION.md); this section records implementation and test behavior without duplicating its 30-step table.
 
 After reset the product performs no application TX while observing fresh ECU-only S0 for eight seconds. If a complete fresh external S3 exists, it remains passive and records an external session. Otherwise startup is permitted only when the complete S0 baseline is present and no unexpected non-RTR traffic was observed.
 
