@@ -1,19 +1,18 @@
 # Contributing to CraftBridge
 
-Contributions are welcome when they improve a reproducible standalone SmartCraft-to-NMEA 2000 implementation.
+Contributions are welcome when they improve the reproducible standalone Motor Node A/Web implementation.
 
 ## Useful contributions
 
-- Engine Node or Helm Node firmware with pinned, reproducible builds
+- Motor Node A/Web firmware with pinned, reproducible builds
 - Schematics, protected power design, PCB/layout review, and verified connector information
 - Decoder and session-state-machine tests
 - Independent SmartCraft captures and compatibility results from other engines
-- NMEA 2000 analyzer results and Garmin/ECHOMAP interoperability evidence
 - Documentation corrections backed by source code or reproducible observations
 
 ## Controlled SmartCraft input boundary
 
-[SMARTCRAFT_INPUT_CONTRACT.md](SMARTCRAFT_INPUT_CONTRACT.md) is the sole authoritative source for concrete SmartCraft input definitions. Contributions may implement its Verified mappings but must not duplicate competing CAN/page/byte definitions elsewhere. A change to the contract requires new verified SmartCraft evidence and a versioned contract revision.
+[SmartCraft Input Contract 1.3.0](releases/3A/docs/SMARTCRAFT_INPUT_CONTRACT.md) is the sole authoritative source for concrete SmartCraft input definitions. Contributions may implement its Verified mappings but must not duplicate competing CAN/page/byte definitions elsewhere. A change to the contract requires new verified SmartCraft evidence and a versioned contract revision.
 
 Results from other ECU variants should be reported as separate compatibility evidence; they must not weaken or silently generalize the tested-ECU baseline.
 
@@ -26,7 +25,7 @@ Use these labels:
 - **Unknown:** unresolved
 - **Rejected:** tested and not supported
 
-A verified SmartCraft source mapping does not verify its NMEA destination. Do not present reverse-engineered findings as official Mercury, Garmin, or NMEA specifications.
+Do not present reverse-engineered findings as official Mercury specifications.
 
 For protocol or compatibility reports, include engine model/year, ECU/software identity if available, topology, CAN bitrate, capture hardware/configuration, test conditions, raw minimal evidence, expected and observed result, and repetition count. Remove serial numbers and personal information unless intentionally required.
 
@@ -34,7 +33,6 @@ For protocol or compatibility reports, include engine model/year, ECU/software i
 
 Contributions must not:
 
-- electrically bridge SmartCraft and NMEA 2000;
 - add termination to an already terminated SmartCraft bus;
 - add arbitrary SmartCraft transmit, fuzzing, diagnostics, calibration, configuration, or control passthrough;
 - use historical challenge responses as constants;

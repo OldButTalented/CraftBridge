@@ -1,0 +1,584 @@
+{
+  "schema": 1,
+  "authority": {
+    "startup": "FULL_STARTUP_REPLAY_TOOL_5MIN_PASSIVE",
+    "s3_capture": "execute_20260823_094341/raw_can.jsonl",
+    "input_contract": "SMARTCRAFT_INPUT_CONTRACT.md v1.3.0"
+  },
+  "can_bitrate": 250000,
+  "response_timeout_ms": 250,
+  "s0_observation_ms": 8000,
+  "steps": [
+    {
+      "number": 1,
+      "id": 2931,
+      "extended": true,
+      "payload": "55",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "AA"
+      }
+    },
+    {
+      "number": 2,
+      "id": 2931,
+      "extended": true,
+      "payload": "C000",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "1B"
+      }
+    },
+    {
+      "number": 3,
+      "id": 2931,
+      "extended": true,
+      "payload": "C001",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "03"
+      }
+    },
+    {
+      "number": 4,
+      "id": 2931,
+      "extended": true,
+      "payload": "C006",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "0C"
+      }
+    },
+    {
+      "number": 5,
+      "id": 2931,
+      "extended": true,
+      "payload": "C005",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "0A"
+      }
+    },
+    {
+      "number": 6,
+      "id": 2931,
+      "extended": true,
+      "payload": "FA0401",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": true,
+        "response": null
+      }
+    },
+    {
+      "number": 7,
+      "id": 2931,
+      "extended": true,
+      "payload": null,
+      "dynamic_transform": "fa0401",
+      "gate": {
+        "challenge": false,
+        "response": "0401"
+      }
+    },
+    {
+      "number": 8,
+      "id": 2931,
+      "extended": true,
+      "payload": "06000C0000",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "0C0000"
+      }
+    },
+    {
+      "number": 9,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "4D593230"
+      }
+    },
+    {
+      "number": 10,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "30367030"
+      }
+    },
+    {
+      "number": 11,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "41414149"
+      }
+    },
+    {
+      "number": 12,
+      "id": 2931,
+      "extended": true,
+      "payload": "0001",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "00"
+      }
+    },
+    {
+      "number": 13,
+      "id": 2931,
+      "extended": true,
+      "payload": "06000D0000",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "0D0000"
+      }
+    },
+    {
+      "number": 14,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "4D593230"
+      }
+    },
+    {
+      "number": 15,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "30367030"
+      }
+    },
+    {
+      "number": 16,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "41414149"
+      }
+    },
+    {
+      "number": 17,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "5F30395F"
+      }
+    },
+    {
+      "number": 18,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "3363796C"
+      }
+    },
+    {
+      "number": 19,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "34305F30"
+      }
+    },
+    {
+      "number": 20,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "315F3030"
+      }
+    },
+    {
+      "number": 21,
+      "id": 2931,
+      "extended": true,
+      "payload": "0301",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "30000000"
+      }
+    },
+    {
+      "number": 22,
+      "id": 2931,
+      "extended": true,
+      "payload": "55",
+      "dynamic_transform": null,
+      "gate": null
+    },
+    {
+      "number": 23,
+      "id": 2931,
+      "extended": true,
+      "payload": "55",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "AA"
+      }
+    },
+    {
+      "number": 24,
+      "id": 2931,
+      "extended": true,
+      "payload": "55",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": false,
+        "response": "AA"
+      }
+    },
+    {
+      "number": 25,
+      "id": 369668211,
+      "extended": true,
+      "payload": "00FFFFFFFF7FFFFF",
+      "dynamic_transform": null,
+      "gate": null
+    },
+    {
+      "number": 26,
+      "id": 369668467,
+      "extended": true,
+      "payload": "00FFFF7FFFFFFFFF",
+      "dynamic_transform": null,
+      "gate": null
+    },
+    {
+      "number": 27,
+      "id": 2931,
+      "extended": true,
+      "payload": "FA0206",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": true,
+        "response": null
+      }
+    },
+    {
+      "number": 28,
+      "id": 2931,
+      "extended": true,
+      "payload": null,
+      "dynamic_transform": "fa0206",
+      "gate": {
+        "challenge": false,
+        "response": "0206"
+      }
+    },
+    {
+      "number": 29,
+      "id": 2931,
+      "extended": true,
+      "payload": "8004",
+      "dynamic_transform": null,
+      "gate": {
+        "challenge": true,
+        "response": null
+      }
+    },
+    {
+      "number": 30,
+      "id": 2931,
+      "extended": true,
+      "payload": null,
+      "dynamic_transform": "selector8004",
+      "gate": {
+        "challenge": false,
+        "response": "04"
+      }
+    }
+  ],
+  "transforms": {
+    "fa0401": {
+      "multiplier": 3547965896,
+      "xor": 457576650,
+      "prefix": 249
+    },
+    "fa0206": {
+      "multiplier": 3481843731,
+      "xor": 1129571539,
+      "prefix": 249
+    },
+    "selector8004": {
+      "multiplier": 2871065115,
+      "xor": 546287642,
+      "prefix": 129
+    }
+  },
+  "signal_mappings": {
+    "rpm": {
+      "id": 368,
+      "page": 0,
+      "bytes": [
+        1,
+        2
+      ],
+      "encoding": "u16be",
+      "scale": 1.0
+    },
+    "temperature": {
+      "id": 416,
+      "page": 7,
+      "bytes": [
+        2
+      ],
+      "encoding": "u8",
+      "scale": 1.0
+    },
+    "hours": {
+      "id": 416,
+      "page": 2,
+      "bytes": [
+        3,
+        4
+      ],
+      "encoding": "u16be",
+      "scale": 0.016666666666666666
+    },
+    "oil": {
+      "id": 416,
+      "page": 5,
+      "bytes": [
+        3,
+        4
+      ],
+      "encoding": "u16be",
+      "scale": 0.01,
+      "offset": 0.0,
+      "unit": "kPa",
+      "evidence_status": "verified_on_tested_ecu",
+      "observed_raw_range": [
+        0,
+        39847
+      ],
+      "observed_range_kpa": [
+        0.0,
+        398.47
+      ],
+      "protocol_global_valid_range": null,
+      "sentinel": null,
+      "ffff_observed": false,
+      "physical_source": "switch-derived_on_tested_ecu",
+      "physical_measurement": "not_verified_analog_hydraulic_pressure"
+    },
+    "battery": {
+      "id": 416,
+      "page": 9,
+      "bytes": [
+        4,
+        5
+      ],
+      "encoding": "u16be",
+      "scale": 0.001
+    },
+    "fuel": {
+      "id": 368,
+      "page": 1,
+      "bytes": [
+        1,
+        2
+      ],
+      "encoding": "u16be",
+      "scale": 0.01
+    }
+  },
+  "s3_templates": [
+    {
+      "id": 368,
+      "page": "00",
+      "extended": false,
+      "payload": "0000000527E9FFFF",
+      "period_ms": 100
+    },
+    {
+      "id": 368,
+      "page": "01",
+      "extended": false,
+      "payload": "0100007530FFEE00",
+      "period_ms": 100
+    },
+    {
+      "id": 368,
+      "page": "02",
+      "extended": false,
+      "payload": "0200000000000000",
+      "period_ms": 100
+    },
+    {
+      "id": 368,
+      "page": "03",
+      "extended": false,
+      "payload": "0300000000000000",
+      "period_ms": 100
+    },
+    {
+      "id": 368,
+      "page": "04",
+      "extended": false,
+      "payload": "0400000000000000",
+      "period_ms": 100
+    },
+    {
+      "id": 368,
+      "page": "05",
+      "extended": false,
+      "payload": "0500000000000000",
+      "period_ms": 100
+    },
+    {
+      "id": 368,
+      "page": "06",
+      "extended": false,
+      "payload": "0600000000000000",
+      "period_ms": 100
+    },
+    {
+      "id": 368,
+      "page": "FF",
+      "extended": false,
+      "payload": "FF00000000000000",
+      "period_ms": 100
+    },
+    {
+      "id": 416,
+      "page": "00",
+      "extended": false,
+      "payload": "0001000000000000",
+      "period_ms": 251
+    },
+    {
+      "id": 416,
+      "page": "01",
+      "extended": false,
+      "payload": "010D000000000000",
+      "period_ms": 250
+    },
+    {
+      "id": 416,
+      "page": "02",
+      "extended": false,
+      "payload": "0200003448000000",
+      "period_ms": 250
+    },
+    {
+      "id": 416,
+      "page": "03",
+      "extended": false,
+      "payload": "0300000000000000",
+      "period_ms": 249
+    },
+    {
+      "id": 416,
+      "page": "04",
+      "extended": false,
+      "payload": "0400000000000000",
+      "period_ms": 248
+    },
+    {
+      "id": 416,
+      "page": "05",
+      "extended": false,
+      "payload": "0500000000000000",
+      "period_ms": 249
+    },
+    {
+      "id": 416,
+      "page": "06",
+      "extended": false,
+      "payload": "0600000000000000",
+      "period_ms": 249
+    },
+    {
+      "id": 416,
+      "page": "07",
+      "extended": false,
+      "payload": "07000E0000000000",
+      "period_ms": 249
+    },
+    {
+      "id": 416,
+      "page": "08",
+      "extended": false,
+      "payload": "0800000000000000",
+      "period_ms": 249
+    },
+    {
+      "id": 416,
+      "page": "09",
+      "extended": false,
+      "payload": "0927D70030940000",
+      "period_ms": 249
+    },
+    {
+      "id": 416,
+      "page": "0A",
+      "extended": false,
+      "payload": "0A64460BB818E702",
+      "period_ms": 249
+    },
+    {
+      "id": 416,
+      "page": "0B",
+      "extended": false,
+      "payload": "0B00000000000000",
+      "period_ms": 249
+    },
+    {
+      "id": 416,
+      "page": "0C",
+      "extended": false,
+      "payload": "0C00000000000000",
+      "period_ms": 248
+    },
+    {
+      "id": 416,
+      "page": "FF",
+      "extended": false,
+      "payload": "FF00000000000000",
+      "period_ms": 249
+    }
+  ]
+}

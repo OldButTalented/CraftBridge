@@ -2,7 +2,7 @@
 
 This document is the public technical baseline needed to implement or adapt CraftBridge. It describes independently observed behavior on one tested installation; it is not an official Mercury specification.
 
-[SMARTCRAFT_INPUT_CONTRACT.md version 1.1.0](../SMARTCRAFT_INPUT_CONTRACT.md) is the sole authoritative source for concrete SmartCraft input mappings and normalized semantics. This document provides protocol/session context and must not be used as a competing signal-definition source.
+[SMARTCRAFT_INPUT_CONTRACT.md version 1.3.0](SMARTCRAFT_INPUT_CONTRACT.md) is the sole authoritative source for concrete SmartCraft input mappings and normalized semantics. This document provides protocol/session context and must not be used as a competing signal-definition source.
 
 ## Evidence scope
 
@@ -46,63 +46,15 @@ A Python + CANable implementation reproduced the required startup without Connec
 - repeated captured startup structures with consistent ordering;
 - physically repeated successful standalone runs on the tested ECU.
 
-This verified ECU behavior is **not implemented in firmware currently published in this repository**.
+This exact 30-transmission, 27-gate behavior is implemented in the Option 3A Motor Node core and verified by deterministic host tests. The accepted baseline also passed physical bench and real-ECU/boat validation. The separate Python/CANable result remains supporting protocol evidence and is not substituted for validation of the released firmware.
 
-### Live challenge transforms
+## S0 → 30-step handshake → S3
 
-Interpret the four-byte challenge `E` as an unsigned big-endian integer. Calculate modulo `2^32`, serialize `R` big-endian, and prepend the response opcode shown by the sequence.
+CraftBridge calls the limited producer traffic before authorization **S0** and the complete expanded producer data set **S3**. These are CraftBridge terms, not official Mercury terminology.
 
-```text
-R = low32(E * multiplier) XOR constant
-```
+When a fresh S3 session is not already present, the Motor Node performs the physically verified **SmartCraft session authorization handshake**: 30 ordered client transmissions, 27 response gates, and three responses calculated from live ECU challenges. Passing the final gate is followed by passive S3 confirmation; the session is active only when the complete expanded producer set is fresh.
 
-| Request | Response payload | Multiplier | XOR constant |
-|---|---|---:|---:|
-| `0x00000B73 : FA 04 01` | `F9 <R32>` | `0xD379A9C8` | `0x1B4610CA` |
-| `0x00000B73 : FA 02 06` | `F9 <R32>` | `0xCF88B813` | `0x4353E4D3` |
-| `0x00000B73 : 80 04` | `81 <R32>` | `0xAB20FA1B` | `0x208FB01A` |
-
-Use the live challenge from the current session. Historical response bytes must not be replayed as constants. The transforms reproduce all relevant captured exchanges exactly and were accepted in the physical standalone tests. Finding the same primitive in later vendor software does not establish that the tested 2006 ECU is byte-identical to that software. Cross-engine portability remains unverified.
-
-## Canonical 30-transmission sequence
-
-Advance only after the stated ECU response. Autonomous 11-bit producer frames may interleave and do not satisfy a gate. Where no gate is listed, proceed as an explicit state-machine step. Abort on timeout or an unexpected directed/extended response; production timeout margins remain to be established.
-
-| # | Client transmission | Required ECU response before next step |
-|---:|---|---|
-| 1 | `0x00000B73 : 55` | `0x0000730B : AA` |
-| 2 | `0x00000B73 : C0 00` | `0x0000730B : 1B` |
-| 3 | `0x00000B73 : C0 01` | `0x0000730B : 03` |
-| 4 | `0x00000B73 : C0 06` | `0x0000730B : 0C` |
-| 5 | `0x00000B73 : C0 05` | `0x0000730B : 0A` |
-| 6 | `0x00000B73 : FA 04 01` | `0x0000730B : <E32>` |
-| 7 | `0x00000B73 : F9 <live R32>` | `0x0000730B : 04 01` |
-| 8 | `0x00000B73 : 06 00 0C 00 00` | `0x0000730B : 0C 00 00` |
-| 9 | `0x00000B73 : 03 01` | `0x0000730B : 4D 59 32 30` |
-| 10 | `0x00000B73 : 03 01` | `0x0000730B : 30 36 70 30` |
-| 11 | `0x00000B73 : 03 01` | `0x0000730B : 41 41 41 49` |
-| 12 | `0x00000B73 : 00 01` | `0x0000730B : 00` |
-| 13 | `0x00000B73 : 06 00 0D 00 00` | `0x0000730B : 0D 00 00` |
-| 14 | `0x00000B73 : 03 01` | `0x0000730B : 4D 59 32 30` |
-| 15 | `0x00000B73 : 03 01` | `0x0000730B : 30 36 70 30` |
-| 16 | `0x00000B73 : 03 01` | `0x0000730B : 41 41 41 49` |
-| 17 | `0x00000B73 : 03 01` | `0x0000730B : 5F 30 39 5F` |
-| 18 | `0x00000B73 : 03 01` | `0x0000730B : 33 63 79 6C` |
-| 19 | `0x00000B73 : 03 01` | `0x0000730B : 34 30 5F 30` |
-| 20 | `0x00000B73 : 03 01` | `0x0000730B : 31 5F 30 30` |
-| 21 | `0x00000B73 : 03 01` | `0x0000730B : 30 00 00 00` |
-| 22 | `0x00000B73 : 55` | no response observed |
-| 23 | `0x00000B73 : 55` | `0x0000730B : AA` |
-| 24 | `0x00000B73 : 55` | `0x0000730B : AA` |
-| 25 | `0x1608B073 : 00 FF FF FF FF 7F FF FF` | no response observed |
-| 26 | `0x1608B173 : 00 FF FF 7F FF FF FF FF` | no response observed |
-| 27 | `0x00000B73 : FA 02 06` | `0x0000730B : <E32>` |
-| 28 | `0x00000B73 : F9 <live R32>` | `0x0000730B : 02 06` |
-| 29 | `0x00000B73 : 80 04` | `0x0000730B : <E32>` |
-| 30 | `0x00000B73 : 81 <live R32>` | `0x0000730B : 04` |
-
-The identity/profile response bytes above were observed on the tested ECU and may be engine/software-specific. A compatible implementation should validate rather than blindly assume them when adapting to another engine.
-
+The authoritative human-readable sequence, including all 30 steps, gate responses, challenge-response parameters, and verified calculation examples, is [SmartCraft session authorization handshake](smartcraft-session-authorization.md). The executable firmware table remains authoritative for implementation behavior.
 ## Expanded producer state and persistence
 
 After successful startup, with no further SmartCraft protocol TX, the tested ECU produced:
@@ -120,20 +72,20 @@ CraftBridge requires target-data coverage, not replication of every frame seen w
 
 ## Six verified signal mappings
 
-[SMARTCRAFT_INPUT_CONTRACT.md version 1.1.0](../SMARTCRAFT_INPUT_CONTRACT.md) remains normative. This table is the synchronized public engineering summary.
+[SMARTCRAFT_INPUT_CONTRACT.md version 1.3.0](SMARTCRAFT_INPUT_CONTRACT.md) remains normative. This table is the synchronized public engineering summary.
 
 | Signal / normalized field | CAN mapping | Conversion | Availability and evidence boundary |
 |---|---|---|---|
 | RPM / `rpm` | `0x170`, page `00`, `D2:D3`, u16be | `rpm = raw`; 1 RPM/bit | Verified on tested ECU; autonomous baseline |
 | Coolant / `coolant_temperature_c` | `0x1A0`, page `07`, `D3` | `temperature_c = raw`; 1 °C/bit | Verified on tested ECU; expanded state |
 | Runtime / `runtime_hours` | `0x1A0`, page `02`, `D4:D5`, u16be minutes | `runtime_hours = raw / 60.0` | Verified on tested ECU; expanded state; `0x1E0/page 00` mirror not required |
-| Oil status / `oil_pressure_ok` | `0x1A0`, page `05`, `D4:D5`, u16be | stable CLOSED (`0x0000`/`0x0001`) = false; stable OPEN (`0x9B82`) = true | Verified filtered binary switch representation; transition values remain invalid; never convert to kPa |
+| ECU-reported oil pressure / `oil_pressure_kpa` | `0x1A0`, page `05`, `D4:D5`, u16be | `oil_pressure_kpa = raw × 0.01`; offset 0; unit kPa | Verified on tested ECU; observed 0.00–398.47 kPa is not a protocol-global valid range; no sentinel documented |
 | Battery / `battery_voltage_v` | `0x1A0`, page `09`, `D5:D6`, u16be | `battery_voltage_v = raw × 0.001` | Verified on tested ECU for charging/status use; ECU supply may differ from battery-terminal DMM |
 | Fuel / `fuel_flow_lph` | `0x170`, page `01`, `D2:D3`, u16be | `fuel_flow_lph = raw × 0.01` | Verified against synchronized Connect Mobile reference; not laboratory flow-meter verification |
 
 ### Oil evidence boundary
 
-The tested engine uses a binary oil-pressure switch: below approximately 20 kPa the switch is CLOSED to ground; above approximately 20 kPa it is OPEN. Repeated controlled interventions produced repeatable CAN changes. Short transition/filter values included `0x9B78`, `0x9B5C` and `0x99F4`; the ECU filtering algorithm is unknown. Connect Mobile numeric presentation does not turn this into an analog pressure measurement.
+The numeric mapping is Verified against synchronized Connect Mobile reference on the tested ECU. The tested engine nevertheless uses a binary oil-pressure switch, so the ECU-reported numeric value is filtered or substituted from switch state and is not measured analog hydraulic pressure. Observed values include `0x0000`, `0x0001`, `0x9B82`, `0x9B8B`, `0x9B94` and `0x9BA7`. The observed 0.00–398.47 kPa profile is not a protocol-global valid range; no sentinel is documented, and the unobserved `0xFFFF` is not assigned invented semantics.
 
 ### Battery evidence boundary
 
@@ -143,13 +95,13 @@ The mapping combines multiple Connect Mobile correlations with independent batte
 
 The mapping explained 35/36 usable synchronized references, 8/8 repeated 0.4-to-0.5 l/h events and 4/4 large excursions. Mean absolute reference error was approximately 0.034 l/h, maximum approximately 0.130 l/h, and observed app lag approximately 0.392-0.856 s with 0.806 s median. Different fuel rates near the same RPM demonstrate that it is not a simple RPM lookup. Accumulated consumption is not a separate verified ECU field; software may later integrate fresh instantaneous flow.
 
-None of the six decoders, normalized fields or downstream transports is implemented in the current repository.
+Five unchanged contracted decoders remain implemented and host-tested. The version 1.3.0 numeric oil-pressure decoder and normalized field are not yet implemented; the current boolean oil-status runtime/UI path is legacy behavior pending a separate firmware task. Downstream transports and outputs remain unimplemented.
 
 ## Session coexistence design requirement
 
-Status: **DESIGN DECISION — NOT IMPLEMENTED**.
+Status: **IMPLEMENTED AND HOST-TESTED**.
 
-CraftBridge follows a coexistence-first policy: after IGN ON it waits and monitors for the required expanded producer state, gives Connect Mobile the first opportunity to establish it, remains passive when the required pages are already present, and performs standalone initialization only after a defined timeout. During operation, a single missed frame does not trigger recovery; required expanded pages must remain absent beyond a defined freshness timeout before controlled re-establishment.
+CraftBridge follows a coexistence-first policy: after IGN ON it waits and monitors for the required expanded producer state, gives Connect Mobile the first opportunity to establish it, remains passive when the required pages are already present, and performs standalone initialization only after a defined timeout. During operation, a single missed frame does not trigger recovery; required expanded pages remaining absent beyond the defined freshness timeout cause terminal session loss with application TX disabled; startup is not replayed automatically.
 
 The approximately 5.8-second Connect startup delay is an observation on the tested setup and a design reference, not a universal Mercury protocol constant. An IGN OFF/session reset requires a new establishment.
 
