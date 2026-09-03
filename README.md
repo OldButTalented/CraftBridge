@@ -30,6 +30,10 @@ The complete Option 3A firmware source and reproducible software tests are avail
 
 SmartCraft behavior is verified only on the documented test platform. General Mercury compatibility is not claimed. A standardized **Test your Mercury / Add your ECU** workflow and evidence-based positive compatibility list will be added later.
 
-## License and safety
+## License
 
-Repository content is provided under the [Apache License 2.0](LICENSE). CraftBridge is experimental, uncertified equipment and must not be the sole source of safety-critical engine information. See the [disclaimer](DISCLAIMER.md).
+CraftBridge uses scope-specific open-source licences for software, hardware and documentation. Commercial use, building and sale remain permitted subject to the applicable terms. See the canonical [licensing overview](LICENSE.md).
+
+## Safety
+
+CraftBridge is experimental, uncertified equipment and must not be the sole source of safety-critical engine information. See the [disclaimer](DISCLAIMER.md).
