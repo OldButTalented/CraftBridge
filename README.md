@@ -26,9 +26,11 @@ Assembled PCBA, flashing and installation material are not available yet because
 
 The complete Option 3A firmware source and reproducible software tests are available under [`releases/3A/`](releases/3A/README.md). Open hardware and production sources will be added after the shared platform is validated. The future hardware release will include standard manufacturing files and will not require a specific PCB manufacturer.
 
-## Compatibility
+## Test your Mercury / Add your ECU
 
-SmartCraft behavior is verified only on the documented test platform. General Mercury compatibility is not claimed. A standardized **Test your Mercury / Add your ECU** workflow and evidence-based positive compatibility list will be added later.
+Test CraftBridge on your engine and [submit a compatibility report](https://github.com/OldButTalented/CraftBridge/issues/new?template=test-your-mercury.yml). See the maintainer-curated [compatibility list](COMPATIBILITY.md) for reviewed results.
+
+Reports are reviewed before they are added to the official list; submitting an issue does not update it automatically. Compatibility is evidence-based and general Mercury compatibility is not claimed.
 
 ## License
 
