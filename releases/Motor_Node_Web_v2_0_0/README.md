@@ -23,6 +23,8 @@ ESP-NOW characteristics:
 - Transmission interval: `250 ms` (`4 Hz`)
 - Peer configuration: compile time
 
+Before building, replace `kEspNowPeerMac` in `firmware/CraftBridge_Motor_Node_Web_v2_0_0/Config.h` with your Instrument Node **STA MAC**. Use [CraftBridge Node Identity](../CraftBridge_Node_Identity/README.md) to read it. The non-zero MAC currently present in the frozen source is a device-specific development/test configuration and must not be used for another device.
+
 The packet contains normalized RPM, coolant temperature, runtime hours, oil pressure, battery voltage, fuel flow, boot-relative fuel used and boot-relative trip time. It does not bridge raw SmartCraft CAN frames.
 
 ## Physical acceptance
@@ -32,6 +34,8 @@ The following bench chain passed physically:
 `ECU simulator -> SmartCraft CAN/CANable -> Motor Node v2 -> ESP-NOW -> Instrument Node -> OLED`
 
 Observed acceptance included unchanged Motor Node Web behavior, Wi-Fi SoftAP and ESP-NOW coexistence on channel 6, all eight normalized values reaching the OLED, and CAN `missed / overrun / bus = 0 / 0 / 0`.
+
+Validation of v2.0.0 is scoped to the ECU simulator/CANable bench chain, the physically tested ESP-NOW path through the Instrument Node and display, and the accepted Motor Node Web UI regression. Real Mercury ECU/boat validation applies to the archived Motor Node Web v1.0.0 baseline and is not claimed for v2.0.0.
 
 ## Release contents
 

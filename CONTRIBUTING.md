@@ -12,7 +12,7 @@ Contributions are welcome when they improve the reproducible standalone Motor No
 
 ## Controlled SmartCraft input boundary
 
-[SmartCraft Input Contract 1.3.0](releases/3A/docs/SMARTCRAFT_INPUT_CONTRACT.md) is the sole authoritative source for concrete SmartCraft input definitions. Contributions may implement its Verified mappings but must not duplicate competing CAN/page/byte definitions elsewhere. A change to the contract requires new verified SmartCraft evidence and a versioned contract revision.
+[SmartCraft Input Contract 1.3.0](archive/Motor_Node_Web_v1_0_0/docs/SMARTCRAFT_INPUT_CONTRACT.md) is the sole authoritative source for concrete SmartCraft input definitions. Contributions may implement its Verified mappings but must not duplicate competing CAN/page/byte definitions elsewhere. A change to the contract requires new verified SmartCraft evidence and a versioned contract revision.
 
 Results from other ECU variants should be reported as separate compatibility evidence; they must not weaken or silently generalize the tested-ECU baseline.
 
@@ -47,4 +47,4 @@ Any SmartCraft transmission change requires a narrowly scoped design, explicit e
 
 Keep each pull request focused. Explain the change, evidence status, risk, test method, results, and remaining limitations. Update documentation and tests together with implementation changes. Avoid generated files and large binaries unless they are essential and discussed first.
 
-By contributing, you agree that your contribution may be distributed under Apache License 2.0 and confirm that you have the right to submit it. Keep discussion technical, factual, and respectful.
+By contributing, you confirm that you have the right to submit the contribution and agree that it may be distributed under the licence applicable to its scope: software, firmware, tools and tests under `GPL-3.0-or-later`; hardware under `CERN-OHL-S-2.0`; and documentation under `CC-BY-SA-4.0`. Third-party content retains its own licence. See the canonical [licensing overview](LICENSE.md). Keep discussion technical, factual, and respectful.

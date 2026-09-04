@@ -1,12 +1,12 @@
 name: Test your Mercury / Add your ECU
-description: Submit a short CraftBridge compatibility test report for maintainer review.
+description: Submit a concise CraftBridge compatibility test report for maintainer review.
 title: "[Compatibility]: "
 body:
   - type: markdown
     attributes:
       value: |
         Thank you for testing CraftBridge. Reports are reviewed before any result is added to the maintainer-curated compatibility list.
-        Do not include engine serial numbers, credentials, private paths, or other private identifiers.
+        Do not include engine serial numbers, credentials, private paths, proprietary files, or other private identifiers.
 
   - type: input
     id: engine_model
@@ -27,32 +27,65 @@ body:
   - type: input
     id: ecu
     attributes:
-      label: ECU family or part number
+      label: ECU / ECM family or part number
       description: Provide this only if known. Do not provide the engine serial number.
       placeholder: Example: ECM-555/PCM-555 family
 
   - type: input
     id: craftbridge_version
     attributes:
-      label: CraftBridge variant and version
+      label: CraftBridge version
       placeholder: Example: Motor Node Web v2.0.0
     validations:
       required: true
 
   - type: textarea
-    id: working_values
+    id: smartcraft_setup
     attributes:
-      label: Working engine values
-      description: List the values that produced current and plausible readings, and identify any values that did not.
-      placeholder: RPM, engine temperature, engine runtime, oil pressure, battery voltage, fuel flow
+      label: SmartCraft presence and setup
+      description: Describe the installed SmartCraft equipment or isolated bench setup.
     validations:
       required: true
 
   - type: textarea
-    id: session_result
+    id: topology
     attributes:
-      label: Session/startup result
-      description: If available, describe startup/session state, S0/S3 result, and whether application TX remained disabled after startup.
+      label: Test topology and interface hardware
+      description: Describe the connections and identify the CAN interface, transceiver or capture hardware used.
+    validations:
+      required: true
+
+  - type: input
+    id: can_bitrate
+    attributes:
+      label: CAN bitrate
+      description: Enter the bitrate if known.
+      placeholder: Example: 250 kbit/s
+
+  - type: textarea
+    id: test_conditions
+    attributes:
+      label: Test conditions
+      description: State whether the engine was stopped, running or tested in both states, and describe relevant ignition/startup conditions.
+    validations:
+      required: true
+
+  - type: input
+    id: repetitions
+    attributes:
+      label: Number of test runs
+      placeholder: Example: 3
+    validations:
+      required: true
+
+  - type: textarea
+    id: observed_result
+    attributes:
+      label: Observed result and working engine values
+      description: Describe startup/session behavior and list values that worked or failed.
+      placeholder: RPM, engine temperature, runtime, oil pressure, battery voltage, fuel flow
+    validations:
+      required: true
 
   - type: input
     id: can_counters
@@ -71,8 +104,27 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: evidence_availability
+    attributes:
+      label: Raw evidence or log availability
+      options:
+        - Attached or linked
+        - Available on request
+        - Not available
+    validations:
+      required: true
+
   - type: textarea
-    id: evidence
+    id: comments
     attributes:
       label: Comments and relevant evidence
-      description: Add concise observations and links or attachments that support the result. Remove private identifiers before submitting.
+      description: Add concise observations and links or attachments. Remove private identifiers before submitting.
+
+  - type: checkboxes
+    id: submission_rights
+    attributes:
+      label: Submission confirmation
+      options:
+        - label: I confirm that the submitted data contains no private or proprietary material and that I have the right to share it.
+          required: true

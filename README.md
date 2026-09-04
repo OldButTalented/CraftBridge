@@ -2,6 +2,16 @@
 
 CraftBridge is an independent open-source implementation for accessing selected Mercury SmartCraft engine data.
 
+## What you can use today
+
+- **Motor Node Web v2.0.0:** released
+- **Web interface:** available
+- **ESP-NOW output:** available
+- **CraftBridge Node Identity:** available
+- **Instrument Node:** under development
+- **NMEA 2000 output:** not released yet
+- **Hardware, PCB and BOM:** not released yet
+
 ## Current releases
 
 | Artifact | Status | Scope |
