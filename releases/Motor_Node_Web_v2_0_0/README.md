@@ -39,7 +39,7 @@ Observed acceptance included unchanged Motor Node Web behavior, Wi-Fi SoftAP and
 |---|---|
 | [`firmware/`](firmware/README.md) | Arduino IDE-ready frozen Motor Node Web v2.0.0 source |
 
-The shared SmartCraft startup behavior is documented in [SmartCraft Session Authorization](../../SMARTCRAFT_SESSION_AUTHORIZATION.md). The existing released Option 3A material remains under [`releases/3A/`](../3A/README.md).
+The shared SmartCraft startup behavior is documented in [SmartCraft Session Authorization](../../SMARTCRAFT_SESSION_AUTHORIZATION.md). The previous Motor Node Web v1.0.0 release is retained under [`archive/Motor_Node_Web_v1_0_0/`](../../archive/Motor_Node_Web_v1_0_0/README.md).
 
 ## License and safety
 
