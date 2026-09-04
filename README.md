@@ -6,8 +6,9 @@ CraftBridge is an independent open-source implementation for accessing selected 
 
 | Artifact | Status | Scope |
 |---|---|---|
-| [Motor Node Web v2.0.0](releases/Motor_Node_Web_v2_0_0/README.md) | **Current / physically verified / frozen** | SmartCraft/Web plus ESP-NOW output for the developing 3B/3C system |
-| [CraftBridge Node Identity](releases/CraftBridge_Node_Identity/README.md) | **Current / physically verified** | Reads ESP32-S3 Base, STA and SoftAP MAC addresses for compile-time ESP-NOW pairing |
+| [Motor Node Web v2.0.0](releases/Motor_Node_Web_v2_0_0/README.md) | **Frozen** | SmartCraft/Web plus ESP-NOW output for the developing 3B/3C system |
+| Instrument node| **Development** | ESP-NOW input, display and NMEA 2000 output |
+| [CraftBridge Node Identity](releases/CraftBridge_Node_Identity/README.md) | **Frozen** | Reads ESP32-S3 Base, STA and SoftAP MAC addresses for compile-time ESP-NOW pairing |
 
 ## Archived releases
 
