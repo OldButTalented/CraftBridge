@@ -6,9 +6,9 @@ CraftBridge is an independent open-source implementation for accessing selected 
 
 | Artifact | Status | Scope |
 |---|---|---|
-| [Motor Node Web v2.0.0](releases/Motor_Node_Web_v2_0_0/README.md) | **Frozen** | SmartCraft/Web plus ESP-NOW output for Instrument Node communication |
+| [Motor Node Web v2.0.0](releases/Motor_Node_Web_v2_0_0/README.md) | **Released / Frozen** | SmartCraft/Web plus ESP-NOW output for Instrument Node communication |
 | [Instrument node](releases/Instrument_Node/README.md)| **Development** | ESP-NOW input, display and NMEA 2000 output |
-| [CraftBridge Node Identity](releases/CraftBridge_Node_Identity/README.md) | **Frozen** | Reads ESP32-S3 Base, STA and SoftAP MAC addresses for compile-time ESP-NOW pairing |
+| [CraftBridge Node Identity](releases/CraftBridge_Node_Identity/README.md) | **Released / Frozen** | Reads ESP32-S3 Base, STA and SoftAP MAC addresses for compile-time ESP-NOW pairing |
 
 ## Archived releases
 
@@ -16,7 +16,7 @@ CraftBridge is an independent open-source implementation for accessing selected 
 
 ## Product status
 
-Motor Node Web v2.0.0 is the current Motor Node firmware. Instrument Node ESP-NOW reception and OLED display are physically validated; Instrument Node NMEA 2000 remains under development. This repository state does not constitute a complete Option 3B or 3C product release.
+Motor Node Web v2.0.0 is the current Motor Node firmware. Instrument Node ESP-NOW reception and OLED display are physically validated; Instrument Node NMEA 2000 remains under development.
 
 The shared technical reference for the session startup is [SmartCraft Session Authorization](SMARTCRAFT_SESSION_AUTHORIZATION.md).
 

@@ -2,14 +2,14 @@
 
 ## Release status
 
-- Firmware: **Physically verified / accepted / frozen**
+- Firmware: **Released / physically verified / accepted / frozen**
 - Development firmware baseline: `3a37f6e1603241fe8cd43c758aa4d37e80c8508d`
-- Scope: standalone Motor Node firmware for the developing CraftBridge 3B/3C system
-- Complete CraftBridge 3B/3C product: **Not released**
+- Scope: current Motor Node firmware with SmartCraft/Web plus ESP-NOW output for Instrument Node communication
+- Instrument Node firmware: **In development / not released**
 
 This release preserves the verified SmartCraft acquisition, session, decoder and freshness behavior and the existing Motor Node Web interface. It adds ESP-NOW transmission of normalized engine values and is prepared for Instrument Node pairing/communication.
 
-The first iteration uses compile-time peer configuration. Dynamic Web-based pairing/configuration is not implemented. Instrument Node ESP-NOW reception and OLED display are physically validated, but Instrument Node NMEA 2000 functionality is still under development. This is not the complete CraftBridge 3B/3C release.
+The first iteration uses compile-time peer configuration. Dynamic Web-based pairing/configuration is not implemented. Instrument Node ESP-NOW reception and OLED display are physically validated, but Instrument Node NMEA 2000 functionality is still under development. The Instrument Node firmware is not yet released.
 
 ## Architecture and scope
 

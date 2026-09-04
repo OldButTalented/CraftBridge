@@ -14,4 +14,4 @@ Community reports are submitted through [Test your Mercury / Add your ECU](https
 
 | Status | Mercury engine | Model year | ECU | CraftBridge variant/version | Result |
 |---|---|---|---|---|---|
-| Maintainer verified | Mercury 40 EFI FourStroke | Approximately MY2006 | ECM-555/PCM-555 family | Option 3A Motor Node A/Web v1.0.0; firmware baseline `06e6ab66588173c0f9072d2bfa5940969a2d0ba6` | Bench and real-ECU/boat validation: PASS |
+| Maintainer verified | Mercury 40 EFI FourStroke | Approximately MY2006 | ECM-555/PCM-555 family | Motor Node Web v1.0.0 (archived release); firmware baseline `06e6ab66588173c0f9072d2bfa5940969a2d0ba6` | Bench and real-ECU/boat validation: PASS |

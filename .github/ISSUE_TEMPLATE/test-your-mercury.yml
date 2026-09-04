@@ -35,7 +35,7 @@ body:
     id: craftbridge_version
     attributes:
       label: CraftBridge variant and version
-      placeholder: Example: Option 3A Motor Node A/Web v1.0.0
+      placeholder: Example: Motor Node Web v2.0.0
     validations:
       required: true
 
