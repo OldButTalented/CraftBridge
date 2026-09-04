@@ -7,10 +7,12 @@ CraftBridge is an independent open-source implementation for accessing selected 
 | Variant | Firmware/software | Hardware | Status |
 |---|---|---|---|
 | [Option 3A](releases/3A/README.md) | Released | Shared hardware platform in development | **Released firmware/software** |
-| Option 3B | Not released | Shared hardware platform in development | **Planned / coming later** |
-| Option 3C | Not released | Shared hardware platform in development | **Planned / coming later** |
+| Option 3B | Motor Node v2 released separately; Instrument Node/NMEA 2000 pending | Shared hardware platform in development | **Not a complete release** |
+| Option 3C | Motor Node v2 released separately; Instrument Node/NMEA 2000 pending | Shared hardware platform in development | **Not a complete release** |
 
 Option 3A provides the validated Motor Node A firmware/software release: SmartCraft session handling, six verified engine inputs, a local Wi-Fi access point, Web UI, diagnostics and JSON output. It is bench validated and real-ECU/boat validated.
+
+The standalone [CraftBridge Motor Node Web v2.0.0](releases/Motor_Node_Web_v2_0_0/README.md) firmware release preserves the Option 3A SmartCraft/Web behavior and adds ESP-NOW output of normalized engine values. It is physically verified and frozen, and is prepared for Instrument Node pairing/communication. Instrument Node NMEA 2000 remains under development; this does not constitute a complete Option 3B or 3C release.
 
 The shared technical reference for the session startup is [SmartCraft Session Authorization](SMARTCRAFT_SESSION_AUTHORIZATION.md).
 
