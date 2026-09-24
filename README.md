@@ -22,7 +22,7 @@ CraftBridge is an independent open-source implementation for accessing selected 
 
 ## Archived releases
 
-[Motor Node Web v1.0.0](archive/Motor_Node_Web_v1_0_0/README.md) remains available as a frozen historical release and rollback reference. Its existing Git tag and GitHub Release are preserved, but v1.0.0 is no longer the recommended current Motor Node firmware.
+Motor Node Web v1.0.0 remains available as a frozen historical release and rollback reference. Its existing Git tag and GitHub Release are preserved, but v1.0.0 is no longer the recommended current Motor Node firmware.
 
 ## Product status
 
